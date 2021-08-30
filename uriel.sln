@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1622
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uriel-core", "uriel-core\uriel-core.vcxproj", "{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}.Debug|x64.ActiveCfg = Debug|x64
+		{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}.Debug|x64.Build.0 = Debug|x64
+		{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}.Debug|x86.ActiveCfg = Debug|Win32
+		{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}.Debug|x86.Build.0 = Debug|Win32
+		{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}.Release|x64.ActiveCfg = Release|x64
+		{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}.Release|x64.Build.0 = Release|x64
+		{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}.Release|x86.ActiveCfg = Release|Win32
+		{666D5CD6-A5FC-44E8-A858-5EEDFF8B0B7C}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5B423F8-F23E-4F31-AC0B-0D428A39E3CE}
+	EndGlobalSection
+EndGlobal
