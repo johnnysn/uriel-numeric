@@ -78,12 +78,12 @@ bool OptionParser::has(const string& option) {
 
 double OptionParser::parseDouble(const string& option) {
 	double aux;
-	sscanf_s(cmd.optionValue(option).c_str(), "%lf", &aux);
+	sscanf(cmd.optionValue(option).c_str(), "%lf", &aux);
 	return aux;
 }
 
 int OptionParser::parseInt(const string& option) {
 	int aux;
-	sscanf_s(cmd.optionValue(option).c_str(), "%d", &aux);
+	sscanf(cmd.optionValue(option).c_str(), "%d", &aux);
 	return aux;
 }

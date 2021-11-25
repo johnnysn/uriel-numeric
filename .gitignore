@@ -15,12 +15,15 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+CMakeFiles/
 x64/
 x86/
 bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+CMakeCache.txt
+cmake_install.cmake
 
 # Visual Studio 2015 cache/options directory
 .vs/

@@ -8,7 +8,9 @@
 #define PCH_H
 
 // adicione os cabeçalhos que você deseja pré-compilar aqui
-#include "framework.h"
+#ifndef LINUXOS
+ #include "framework.h"
+#endif
 #include "urielenv.h"
 
 #endif //PCH_H

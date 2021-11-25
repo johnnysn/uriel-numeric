@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 project (cardiac-cell-solver)
 
-include_directories("../uriel_numeric/include")
+include_directories("../uriel-numeric/include")
 set(SOURCES argvparser.cpp OptionParser.cpp cardiac-cell-solver.cpp )
 
 add_definitions( -Wall -O3 -std=c++11 )
