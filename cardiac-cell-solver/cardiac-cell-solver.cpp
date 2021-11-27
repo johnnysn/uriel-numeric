@@ -6,16 +6,18 @@
 #include "model/electrophysiology/Tusscher2004.h"
 #include "method/ode/RushLarsenAdaptiveMethod.h"
 #include "method/ode/RushLarsenMethod.h"
+#include "method/ode/ForwardEulerMethod.h"
 #include "OptionParser.h"
 
-#define METHOD_RL 0
-#define METHOD_ARL 1
+#define METHOD_EULER 0
+#define METHOD_RL 1
+#define METHOD_AEULER 2
+#define METHOD_ARL 3
 
 using namespace std;
 
-void solveRL(CellModel* model, double dt, double dt_save, double tf);
-void solveARL(CellModel* model, double dt, double dt_save, double tf, double dt_max, double rel_tol);
-
+void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf);
+void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, double tf, double dt_max, double rel_tol);
 
 int main(int argc, char** argv)
 {
@@ -45,18 +47,19 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	if (method_index == METHOD_RL) {
-		solveRL(model, dt, dt_save, tf);
+	if (method_index == METHOD_EULER) {
+		solveFixed(new ForwardEulerMethod(), model, dt, dt_save, tf);
+	} else if (method_index == METHOD_RL) {
+		solveFixed(new RushLarsenMethod(), model, dt, dt_save, tf);
 	} else if (method_index == METHOD_ARL) {
 		double dt_max, rel_tol;
-
 		if (OptionParser::foundOption("dt_max")) dt_max = OptionParser::parseDouble("dt_max");
 		else dt_max = 0.1;
 
 		if (OptionParser::foundOption("rel_tol")) rel_tol = OptionParser::parseDouble("rel_tol");
 		else rel_tol = 0.02;
 
-		solveARL(model, dt, dt_save, tf, dt_max, rel_tol);
+		solveADP(new RushLarsenAdaptiveMethod(), model, dt, dt_save, tf, dt_max, rel_tol);
 	} else {
 		return -1;
 	}
@@ -65,8 +68,7 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-void solveRL(CellModel* model, double dt, double dt_save, double tf) {
-	ODEMethod* method = new RushLarsenMethod();
+void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf) {
 
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
@@ -93,9 +95,7 @@ void solveRL(CellModel* model, double dt, double dt_save, double tf) {
 	}
 }
 
-void solveARL(CellModel* model, double dt, double dt_save, double tf, double dt_max, double rel_tol) {
-	ODEAdaptiveMethod* method = new RushLarsenAdaptiveMethod();
-
+void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, double tf, double dt_max, double rel_tol) {
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
 

@@ -81,6 +81,9 @@
     <ClInclude Include="include\method\ode\RushLarsenAdaptiveMethod.h">
       <Filter>Arquivos de Cabeçalho\method\ode</Filter>
     </ClInclude>
+    <ClInclude Include="include\method\ode\ForwardEulerMethod.h">
+      <Filter>Arquivos de Cabeçalho\method\ode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\model\Model.cpp">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="source\pch.cpp">
       <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\method\ode\ForwardEulerMethod.cpp">
+      <Filter>Arquivos de Origem\method\ode</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
