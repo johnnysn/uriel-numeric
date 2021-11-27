@@ -5,6 +5,7 @@
 #include "model/electrophysiology/Fox2002.h"
 #include "model/electrophysiology/Tusscher2004.h"
 #include "method/ode/RushLarsenAdaptiveMethod.h"
+#include "method/ode/ForwardEulerAdaptiveMethod.h"
 #include "method/ode/RushLarsenMethod.h"
 #include "method/ode/ForwardEulerMethod.h"
 #include "OptionParser.h"
@@ -51,7 +52,7 @@ int main(int argc, char** argv)
 		solveFixed(new ForwardEulerMethod(), model, dt, dt_save, tf);
 	} else if (method_index == METHOD_RL) {
 		solveFixed(new RushLarsenMethod(), model, dt, dt_save, tf);
-	} else if (method_index == METHOD_ARL) {
+	} else if (method_index == METHOD_ARL || method_index == METHOD_AEULER) {
 		double dt_max, rel_tol;
 		if (OptionParser::foundOption("dt_max")) dt_max = OptionParser::parseDouble("dt_max");
 		else dt_max = 0.1;
@@ -59,7 +60,11 @@ int main(int argc, char** argv)
 		if (OptionParser::foundOption("rel_tol")) rel_tol = OptionParser::parseDouble("rel_tol");
 		else rel_tol = 0.02;
 
-		solveADP(new RushLarsenAdaptiveMethod(), model, dt, dt_save, tf, dt_max, rel_tol);
+		ODEAdaptiveMethod* method;
+		if (method_index == METHOD_ARL) method = new RushLarsenAdaptiveMethod();
+		else method = new ForwardEulerAdaptiveMethod();
+
+		solveADP(method, model, dt, dt_save, tf, rel_tol, dt_max);
 	} else {
 		return -1;
 	}
@@ -73,7 +78,7 @@ void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, 
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
 
-	// rhs will store the righ-hand-side values of NL and MK ODEs, and the coefficients a and b of the HH equations 
+	// rhs will store the righ-hand-side values of NL and MK ODEs, and the coefficients a and b of the HH equations (for the RL method)
 	double* rhs = new double[model->nStates + model->nStates_HH];
 	double* algs = new double[model->nAlgs];
 	double* params = new double[model->nParams];
@@ -95,7 +100,7 @@ void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, 
 	}
 }
 
-void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, double tf, double dt_max, double rel_tol) {
+void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, double tf, double rel_tol, double dt_max) {
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
 
@@ -111,14 +116,14 @@ void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_
 
 	double t_save = 0; double dt_new;
 	for (double t = 0; t <= tf; t += dt, dt = dt_new) {
-		dt_new = method->step(Y_new_, model, params, algs, rhs, Y_old_, t, dt, 0.02, 0.05);
+		dt_new = method->step(Y_new_, model, params, algs, rhs, Y_old_, t, dt, rel_tol, dt_max);
 		while (dt_new < 0) {
 			dt = dt * 0.5;
-			dt_new = method->step(Y_new_, model, params, algs, rhs, Y_old_, t, dt, 0.02, 0.05);
+			dt_new = method->step(Y_new_, model, params, algs, rhs, Y_old_, t, dt, rel_tol, dt_max);
 		}
 
 		for (int l = 0; l < model->nStates; l++) Y_old_[l] = Y_new_[l];
-		for (int l = 0; l < model->nStates + model->nStates_HH; l++) rhs[l] = rhs[l + model->nStates + model->nStates_HH];
+		method->updateRHS(model, rhs);
 
 		t_save += dt;
 		if (t_save >= dt_save) {

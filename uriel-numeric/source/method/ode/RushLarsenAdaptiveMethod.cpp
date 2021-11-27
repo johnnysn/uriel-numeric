@@ -5,7 +5,7 @@
 #define ASSESS_LOCAL_ERROR \
 	double f = (rhs[l] + rhs_new[l]) * 0.5; \
 	double y_2nd_order = Y_old_[l] + dt * f; \
-	double local_error = (abs(y_2nd_order) < EPSILON) ? abs(Y_new_[l] - EPSILON) / EPSILON : abs((y_2nd_order - Y_new_[l]) / y_2nd_order); \
+	double local_error = (abs(y_2nd_order) < EPSILON) ? abs(Y_new_[l] - EPSILON) : abs((y_2nd_order - Y_new_[l]) / y_2nd_order); \
 	if (local_error > maxLocalError) maxLocalError = local_error
 
 
@@ -71,4 +71,10 @@ void RushLarsenAdaptiveMethod::prepare(Model* model, double* pars, double* algs,
 	double* as = &(rhs[cellModel->HHStart]);
 	double* bs = &(rhs[cellModel->nStates]);
 	cellModel->calc_hh_coeff(as, bs, pars, algs, Y_ini_, t_ini);
+}
+
+void RushLarsenAdaptiveMethod::updateRHS(Model* model, double* rhs) {
+	CellModel* cellModel = (CellModel*)model;
+	int separation_index = cellModel->nStates + cellModel->nStates_HH;
+	for (int l = 0; l < separation_index; l++) rhs[l] = rhs[l + separation_index];
 }
