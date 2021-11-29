@@ -9,7 +9,7 @@
 #define	OPTIONPARSER_H
 
 #include <string>
-#include "argvparser.h"
+#include "options/argvparser.h"
 
 using namespace std;
 using namespace CommandLineProcessing;

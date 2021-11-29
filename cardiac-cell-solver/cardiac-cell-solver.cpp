@@ -8,7 +8,7 @@
 #include "method/ode/ForwardEulerAdaptiveMethod.h"
 #include "method/ode/RushLarsenMethod.h"
 #include "method/ode/ForwardEulerMethod.h"
-#include "OptionParser.h"
+#include "options/OptionParser.h"
 
 #define METHOD_EULER 0
 #define METHOD_RL 1

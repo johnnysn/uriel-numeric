@@ -1,14 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1622
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uriel-numeric", "uriel-numeric\uriel-numeric.vcxproj", "{049D3D8C-A492-4A18-BEFC-69F4E8CF6F6C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cardiac-cell-solver", "cardiac-cell-solver\cardiac-cell-solver.vcxproj", "{770B7936-03DA-448A-A475-07065319B738}"
 	ProjectSection(ProjectDependencies) = postProject
+		{6C744089-EA72-40D6-8831-D058DDBAE91E} = {6C744089-EA72-40D6-8831-D058DDBAE91E}
 		{049D3D8C-A492-4A18-BEFC-69F4E8CF6F6C} = {049D3D8C-A492-4A18-BEFC-69F4E8CF6F6C}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uriel-tools", "uriel-tools\uriel-tools.vcxproj", "{6C744089-EA72-40D6-8831-D058DDBAE91E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +37,14 @@ Global
 		{770B7936-03DA-448A-A475-07065319B738}.Release|x64.Build.0 = Release|x64
 		{770B7936-03DA-448A-A475-07065319B738}.Release|x86.ActiveCfg = Release|Win32
 		{770B7936-03DA-448A-A475-07065319B738}.Release|x86.Build.0 = Release|Win32
+		{6C744089-EA72-40D6-8831-D058DDBAE91E}.Debug|x64.ActiveCfg = Debug|x64
+		{6C744089-EA72-40D6-8831-D058DDBAE91E}.Debug|x64.Build.0 = Debug|x64
+		{6C744089-EA72-40D6-8831-D058DDBAE91E}.Debug|x86.ActiveCfg = Debug|Win32
+		{6C744089-EA72-40D6-8831-D058DDBAE91E}.Debug|x86.Build.0 = Debug|Win32
+		{6C744089-EA72-40D6-8831-D058DDBAE91E}.Release|x64.ActiveCfg = Release|x64
+		{6C744089-EA72-40D6-8831-D058DDBAE91E}.Release|x64.Build.0 = Release|x64
+		{6C744089-EA72-40D6-8831-D058DDBAE91E}.Release|x86.ActiveCfg = Release|Win32
+		{6C744089-EA72-40D6-8831-D058DDBAE91E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
