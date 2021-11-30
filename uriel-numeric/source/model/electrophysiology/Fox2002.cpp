@@ -2,12 +2,13 @@
 #include "model/electrophysiology/Fox2002.h"
 #include "model/electrophysiology/Fox2002_defs.h"
 
-Fox2002::Fox2002(): CellModel(3, 10, 0, 0, 52, 50) {
+Fox2002::Fox2002(): CellModel(3, 10, 0, 0, 52, 51) {
 
 }
 
 void Fox2002::set_default_parameters(double* pars) 
 {
+	stim_state = 0;
 	stim_amplitude = -8.0000000000e+01;
 	stim_start = 5;
 	stim_end = 10000.0e+03;
@@ -77,7 +78,13 @@ void Fox2002::set_default_initial_state(double* Y_old_)
 	Ca_i_old_ = 4.72000000e-02;
 }
 
-double Fox2002::calc_stimulus(double* pars, double t) {
+double Fox2002::calc_stimulus(double* pars, double t)
+{
+	if (stim_state < 0)
+		return 0;
+	if (stim_state > 0)
+		return stim_amplitude;
+
 	double t_since_last_tick = t - floor(t / stim_period)*stim_period;
 	double pulse_end = stim_start + stim_duration;
 	if (t_since_last_tick >= stim_start && t_since_last_tick <= pulse_end) {

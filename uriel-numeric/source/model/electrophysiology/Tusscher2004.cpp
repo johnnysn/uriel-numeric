@@ -2,7 +2,7 @@
 #include "model/electrophysiology/Tusscher2004.h"
 #include "model/electrophysiology/Tusscher2004_defs.h"
 
-Tusscher2004::Tusscher2004() : CellModel(5, 12, 0, 0, 68, 45) {
+Tusscher2004::Tusscher2004() : CellModel(5, 12, 0, 0, 68, 46) {
 
 }
 
@@ -166,6 +166,7 @@ void Tusscher2004::calc_hh_coeff(double* a, double* b, double* pars, double* alg
 
 void Tusscher2004::set_default_parameters(double* pars)
 {
+	stim_state = 0;
 	stim_amplitude = -5.20e+01;
 	stim_period = 1.0e+03;
 	stim_start = 5.0e+00;
@@ -236,6 +237,11 @@ void Tusscher2004::set_default_initial_state(double* Y_old_)
 
 double Tusscher2004::calc_stimulus(double* pars, double t)
 {
+	if (stim_state < 0)
+		return 0;
+	if (stim_state > 0)
+		return stim_amplitude;
+
 	double t_since_last_tick = t - floor(t / stim_period)*stim_period;
 	double pulse_end = stim_start + stim_duration;
 	if (t_since_last_tick >= stim_start && t_since_last_tick <= pulse_end) {
