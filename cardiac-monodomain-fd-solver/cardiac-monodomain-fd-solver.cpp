@@ -6,6 +6,7 @@
 #include "model/electrophysiology/Tusscher2004.h"
 #include "method/ode/RushLarsenMethod.h"
 #include "options/OptionParser.h"
+#include <chrono>
 #include <omp.h>
 
 long Nx, Ny;
@@ -62,14 +63,18 @@ int main(int argc, char** argv)
 	Nx = Lx / dx;
 	Ny = Ly / dy;
 
-	double* Y_old_ = new double [Nx * Ny * model->nStates]; double* Y_new_ = new double [Nx * Ny * model->nStates];
+	double* Y_old_ = new double [Nx * Ny * model->nStates]; 
+	double* Y_new_ = new double [Nx * Ny * model->nStates];
 	double* ALGS = new double [Nx * Ny * model->nAlgs]; double* PARAMS = new double [Nx * Ny * model->nParams];
 	double* RHS = new double [Nx * Ny * (model->nStates + model->nStates_HH)];
 
 	double t = 0, t_save = 0;
 
+	auto start = std::chrono::high_resolution_clock::now();
+
 	#pragma omp parallel 
 	{
+
 		#pragma omp for
 		for (int k = 0; k < Nx * Ny; k++) {
 			double* params = &(PARAMS[k * model->nParams]);
@@ -87,6 +92,10 @@ int main(int argc, char** argv)
 					double* y_new_ = &(Y_new_[m]); double* y_old_ = &(Y_old_[m]);
 					double* algs = &(ALGS[k * model->nAlgs]); double* params = &(PARAMS[k * model->nParams]);
 					double* rhs = &(RHS[k * (model->nStates + model->nStates_HH)]);
+
+					// Stimulus
+					double x = xi * dx, y = yi * dy;
+					params[0] = (t > 1 && t < 3 && x > 0 && x < 0.1) ? 1 : -1;
 
 					method->step(y_new_, model, params, algs, rhs, y_old_, t, dt);
 
@@ -107,12 +116,15 @@ int main(int argc, char** argv)
 				t += dt;
 				t_save += dt;
 				if (t_save >= dt_save) {
-					cout << "t = " << t << ", V = " << Y_old_[0] << endl;
+					cout << "t = " << t << ", V(x0) = " << Y_old_[0] << ", V(xf) = " << Y_old_[(Nx * Ny - 1) * model->nStates] << endl;
 					t_save = 0;
 				}
 			}
 		}
 	}
 
-    std::cout << "Hello World!\n";
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+
+    std::cout << "Simulation finished in " << elapsed.count() << " s." << std::endl;
 }
