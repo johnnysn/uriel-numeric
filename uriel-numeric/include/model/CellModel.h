@@ -23,6 +23,9 @@ public:
 	// Number of Markov models
 	const int nMarkovModels;
 
+	// Number of states of each Markov model
+	int* nStates_MKM;
+
 	CellModel(int nStates_NL, int nStates_HH, int nStates_MK, int nMarkovModels, int nAlgs, int nParams);
 
 	// Implemented inherited methods
@@ -34,6 +37,8 @@ public:
 	virtual void calc_rhs_mk(double* rhs, double* pars, double* algs, double* Y_old_, double t) = 0;
 
 	virtual void calc_hh_coeff(double* a, double* b, double* pars, double* algs, double* Y_old_, double t) = 0;
+	virtual void prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t) = 0;
+	virtual void calc_mk_transitions(double* T, int mk_index, double* pars, double* algs, double* Y_old_, double t) = 0;
 
 	virtual void set_default_parameters(double* pars) = 0;
 	virtual void set_default_initial_state(double* Y_old_) = 0;

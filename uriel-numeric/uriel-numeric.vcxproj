@@ -163,6 +163,7 @@
     <ClInclude Include="include\method\ode\ODEMethod.h" />
     <ClInclude Include="include\method\ode\RushLarsenAdaptiveMethod.h" />
     <ClInclude Include="include\method\ode\RushLarsenMethod.h" />
+    <ClInclude Include="include\method\ode\UniformizationMethod.h" />
     <ClInclude Include="include\model\CellModel.h" />
     <ClInclude Include="include\model\electrophysiology\Fox2002.h" />
     <ClInclude Include="include\model\electrophysiology\Fox2002_defs.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="source\method\ode\ForwardEulerMethod.cpp" />
     <ClCompile Include="source\method\ode\RushLarsenAdaptiveMethod.cpp" />
     <ClCompile Include="source\method\ode\RushLarsenMethod.cpp" />
+    <ClCompile Include="source\method\ode\UniformizationMethod.cpp" />
     <ClCompile Include="source\model\CellModel.cpp" />
     <ClCompile Include="source\model\electrophysiology\Fox2002.cpp" />
     <ClCompile Include="source\model\electrophysiology\Tusscher2004.cpp" />

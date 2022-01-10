@@ -9,6 +9,7 @@ CellModel::CellModel(int nStates_NL, int nStates_HH, int nStates_MK, int nMarkov
 	HHStart(nStates_NL), HHEnd(nStates_NL + nStates_HH),
 	MKStart(nStates_NL + nStates_HH), MKEnd(nStates_NL + nStates_HH + nStates_MK)
 {
+	nStates_MKM = (nStates_MK > 0) ? new int[nMarkovModels] : NULL;
 }
 
 void CellModel::calc_rhs(double* rhs, double* pars, double* algs, double* Y_old_, double t) 

@@ -87,6 +87,9 @@
     <ClInclude Include="include\method\ode\ForwardEulerAdaptiveMethod.h">
       <Filter>Arquivos de Cabeçalho\method\ode</Filter>
     </ClInclude>
+    <ClInclude Include="include\method\ode\UniformizationMethod.h">
+      <Filter>Arquivos de Cabeçalho\method\ode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\model\Model.cpp">
@@ -114,6 +117,9 @@
       <Filter>Arquivos de Origem\method\ode</Filter>
     </ClCompile>
     <ClCompile Include="source\method\ode\ForwardEulerAdaptiveMethod.cpp">
+      <Filter>Arquivos de Origem\method\ode</Filter>
+    </ClCompile>
+    <ClCompile Include="source\method\ode\UniformizationMethod.cpp">
       <Filter>Arquivos de Origem\method\ode</Filter>
     </ClCompile>
   </ItemGroup>

@@ -2,7 +2,8 @@
 #include "model/electrophysiology/Fox2002.h"
 #include "model/electrophysiology/Fox2002_defs.h"
 
-Fox2002::Fox2002(): CellModel(3, 10, 0, 0, 52, 51) {
+Fox2002::Fox2002(): CellModel(3, 10, 0, 0, 52, 51)
+{
 
 }
 
@@ -208,3 +209,6 @@ void Fox2002::calc_algs_hh(double* algs, double* pars, double* Y_old_, double ti
 	calc_f_Ca_infinity = (1.0e+00 / (1.0e+00 + pow((Ca_i_old_ / K_mfCa), 3.0e+00)));
 	calc_tau_f_Ca = 3.0e+01;
 }
+
+void Fox2002::prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t) {}
+void Fox2002::calc_mk_transitions(double* Tr, int mk_index, double* pars, double* algs, double* Y_old_, double t) {}
