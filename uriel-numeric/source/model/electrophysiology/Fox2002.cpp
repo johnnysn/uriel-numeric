@@ -211,4 +211,4 @@ void Fox2002::calc_algs_hh(double* algs, double* pars, double* Y_old_, double ti
 }
 
 void Fox2002::prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t) {}
-void Fox2002::calc_mk_transitions(double* Tr, int mk_index, double* pars, double* algs, double* Y_old_, double t) {}
+void Fox2002::calc_mk_transitions(double** Tr, int mk_index, double* pars, double* algs, double* Y_old_, double t) {}

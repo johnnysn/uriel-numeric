@@ -4,9 +4,11 @@
 #include <iostream>
 #include "model/electrophysiology/Fox2002.h"
 #include "model/electrophysiology/Tusscher2004.h"
+#include "model/electrophysiology/Bondarenko2004.h"
 #include "method/ode/RushLarsenAdaptiveMethod.h"
 #include "method/ode/ForwardEulerAdaptiveMethod.h"
 #include "method/ode/RushLarsenMethod.h"
+#include "method/ode/UniformizationMethod.h"
 #include "method/ode/ForwardEulerMethod.h"
 #include "options/OptionParser.h"
 
@@ -14,6 +16,7 @@
 #define METHOD_RL 1
 #define METHOD_AEULER 2
 #define METHOD_ARL 3
+#define METHOD_UNI 4
 
 using namespace std;
 
@@ -22,8 +25,8 @@ void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_
 
 int main(int argc, char** argv)
 {
-	OptionParser::addOption("model", "Model: 0 -> ten Tusscher 2004, 1 -> Fox 2002");
-	OptionParser::addOption("method", "Method: 0 -> Rush Larsen, 1 -> Rush Larsen ADP");
+	OptionParser::addOption("model", "Model: 0 -> ten Tusscher 2004, 1 -> Fox 2002, 2 -> Bondarenko 2004");
+	OptionParser::addOption("method", "Method: 0 -> Euler, 1 -> Rush Larsen, 2 -> Euler ADP, 3 -> Rush Larsen ADP, 4 -> UNI (not functional yet)");
 	OptionParser::addOption("dt", "Base time step.");
 	OptionParser::addOption("dt_save", "Time step for saving.");
 	OptionParser::addOption("tf", "Final time");
@@ -44,6 +47,8 @@ int main(int argc, char** argv)
 		model = new Tusscher2004();
 	} else if (model_index == 1) {
 		model = new Fox2002();
+	} else if (model_index == 2) {
+		model = new Bondarenko2004();
 	} else {
 		return -1;
 	}
@@ -52,6 +57,8 @@ int main(int argc, char** argv)
 		solveFixed(new ForwardEulerMethod(), model, dt, dt_save, tf);
 	} else if (method_index == METHOD_RL) {
 		solveFixed(new RushLarsenMethod(), model, dt, dt_save, tf);
+	} else if (method_index == METHOD_UNI) {
+		solveFixed(new UniformizationMethod(), model, dt, dt_save, tf);
 	} else if (method_index == METHOD_ARL || method_index == METHOD_AEULER) {
 		double dt_max, rel_tol;
 		if (OptionParser::foundOption("dt_max")) dt_max = OptionParser::parseDouble("dt_max");
@@ -78,17 +85,25 @@ void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, 
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
 
+	double** Tr = NULL;
+	if (model->nStates_MKM_max > 0) {
+		Tr = new double* [model->nStates_MKM_max];
+		for (int i = 0; i < model->nStates_MKM_max; ++i)
+			Tr[i] = new double[model->nStates_MKM_max];
+	}
+
 	// rhs will store the righ-hand-side values of NL and MK ODEs, and the coefficients a and b of the HH equations (for the RL method)
 	double* rhs = new double[model->nStates + model->nStates_HH];
 	double* algs = new double[model->nAlgs];
 	double* params = new double[model->nParams];
+
 
 	model->set_default_initial_state(Y_old_);
 	model->set_default_parameters(params);
 
 	double t_save = 0; 
 	for (double t = 0; t <= tf; t += dt) {
-		method->step(Y_new_, model, params, algs, rhs, Y_old_, t, dt);
+		method->step(Y_new_, model, params, algs, rhs, Y_old_, t, dt, Tr);
 
 		for (int l = 0; l < model->nStates; l++) Y_old_[l] = Y_new_[l];
 

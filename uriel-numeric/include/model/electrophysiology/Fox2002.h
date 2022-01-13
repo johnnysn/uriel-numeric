@@ -14,7 +14,7 @@ public:
 
 	void calc_hh_coeff(double* a, double* b, double* pars, double* algs, double* Y_old_, double t);
 	void prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t);
-	void calc_mk_transitions(double* T, int mk_index, double* pars, double* algs, double* Y_old_, double t);
+	void calc_mk_transitions(double** T, int mk_index, double* pars, double* algs, double* Y_old_, double t);
 
 	void set_default_parameters(double* pars);
 	void set_default_initial_state(double* Y_old_);

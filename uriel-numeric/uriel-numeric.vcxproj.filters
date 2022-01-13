@@ -90,6 +90,12 @@
     <ClInclude Include="include\method\ode\UniformizationMethod.h">
       <Filter>Arquivos de Cabeçalho\method\ode</Filter>
     </ClInclude>
+    <ClInclude Include="include\model\electrophysiology\Bondarenko2004.h">
+      <Filter>Arquivos de Cabeçalho\model\electrophysiology</Filter>
+    </ClInclude>
+    <ClInclude Include="include\model\electrophysiology\Bondarenko2004_defs.h">
+      <Filter>Arquivos de Cabeçalho\model\electrophysiology</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\model\Model.cpp">
@@ -121,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="source\method\ode\UniformizationMethod.cpp">
       <Filter>Arquivos de Origem\method\ode</Filter>
+    </ClCompile>
+    <ClCompile Include="source\model\electrophysiology\Bondarenko2004.cpp">
+      <Filter>Arquivos de Origem\model\electrophysiology</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

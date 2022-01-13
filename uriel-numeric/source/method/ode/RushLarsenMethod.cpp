@@ -2,7 +2,7 @@
 #include <math.h> 
 #include "method/ode/RushLarsenMethod.h"
 
-void RushLarsenMethod::step(double* Y_new_, Model* model, double* pars, double* algs, double* rhs, double* Y_old_, double t, double dt) 
+void RushLarsenMethod::step(double* Y_new_, Model* model, double* pars, double* algs, double* rhs, double* Y_old_, double t, double dt, double** strut)
 {
 	CellModel* cellModel = (CellModel*)model;
 	partitionedStep(Y_new_, model, pars, algs, rhs, Y_old_, t, dt);
@@ -14,7 +14,7 @@ void RushLarsenMethod::step(double* Y_new_, Model* model, double* pars, double* 
 		Y_new_[l] = Y_old_[l] + dt * rhs[l];
 }
 
-void RushLarsenMethod::partitionedStep(double* Y_new_, Model* model, double* pars, double* algs, double* rhs, double* Y_old_, double t, double dt) 
+void RushLarsenMethod::partitionedStep(double* Y_new_, Model* model, double* pars, double* algs, double* rhs, double* Y_old_, double t, double dt, double** strut)
 {
 	CellModel* cellModel = (CellModel*)model;
 	double* as = &(rhs[cellModel->HHStart]);
@@ -26,7 +26,7 @@ void RushLarsenMethod::partitionedStep(double* Y_new_, Model* model, double* par
 void RushLarsenMethod::step(double* Y_new_, int n, double* as, double* bs, double* Y_old_, double dt) 
 {
 	for (int i = 0; i < n; i++) {
-		if (as[i] == 0) { // TODO change to epsilon comparison
+		if (abs(as[i]) < EPSILON) { // TODO change to epsilon comparison
 			Y_new_[i] = Y_old_[i] + dt * (Y_old_[i] * as[i] + bs[i]);
 		} else {
 			double aux = bs[i] / as[i];

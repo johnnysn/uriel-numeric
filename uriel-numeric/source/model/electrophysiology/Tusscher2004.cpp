@@ -251,4 +251,4 @@ double Tusscher2004::calc_stimulus(double* pars, double t)
 }
 
 void Tusscher2004::prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t) {}
-void Tusscher2004::calc_mk_transitions(double* Tr, int mk_index, double* pars, double* algs, double* Y_old_, double t) {}
+void Tusscher2004::calc_mk_transitions(double** Tr, int mk_index, double* pars, double* algs, double* Y_old_, double t) {}
