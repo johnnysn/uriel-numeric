@@ -2,7 +2,7 @@
 #include "model/electrophysiology/Bondarenko2004.h"
 #include "model/electrophysiology/Bondarenko2004_defs.h"
 
-Bondarenko2004::Bondarenko2004() : CellModel(11, 8, 26, 4, 68, 71)
+Bondarenko2004::Bondarenko2004() : CellModel(11, 8, 26, 4, 68, 72)
 {
     nStates_MKM[0] = 9;
     nStates_MKM[1] = 8;
@@ -18,7 +18,7 @@ void Bondarenko2004::set_default_parameters(double* pars)
     stim_amplitude = -8.0e+01;
     stim_start = 1.0e+0;
     stim_end = 1.0e+05;
-    stim_period = 100.0;
+    stim_period = 60.0;
     stim_duration = 5.0e-01;
     Acap = 1.5340e-04;
     Cm = 1.0e+00;
