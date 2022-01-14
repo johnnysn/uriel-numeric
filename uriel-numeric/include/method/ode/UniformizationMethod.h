@@ -3,6 +3,8 @@
 #include "method/ode/ODEMethod.h"
 #include "method/ode/RushLarsenMethod.h"
 
+#define N_MAX 500
+
 class UniformizationMethod : public ODEMethod {
 
 public:
@@ -20,8 +22,6 @@ private:
 
 	RushLarsenMethod* rushLarsenMethod;
 	void step(double* Y_new_, int n, double* aux, double** Tr, double* pi, double* Y_old_, double dt);
-
-	int calcNMax(double q, double dt);
 
 	double tol = 1e-6;
 

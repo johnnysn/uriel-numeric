@@ -68,12 +68,10 @@ void UniformizationMethod::step(double* Y_new_, int m, double* aux, double** Tr,
 		Y_new_[i] = aux[i] = Y_old_[i];
 	}
 
-	// Estimate N based on q * dt
-	int N = calcNMax(q, dt);
-
 	// Y_new_ is already Y_old_, so the sum starts with k=1
-	double coeff = 1.0;
-	for (int k = 1; k <= N; k++) {
+	double c = exp(-q * dt);
+	double coeff = 1.0, coeff_sum = 1.0;
+	for (int k = 1; k <= N_MAX; k++) {
 		coeff *= q * dt / (double)k;
 
 		// pi = Tr * aux
@@ -87,27 +85,13 @@ void UniformizationMethod::step(double* Y_new_, int m, double* aux, double** Tr,
 			Y_new_[i] += coeff * pi[i];
 			aux[i] = pi[i];
 		}
+
+		coeff_sum += coeff;
+		if (tol > (1.0 - c * coeff_sum)) break; // Maximum N for tol is reached
 	}
 
 	// Multiply Z by exp(-q * dt)
-	double c = exp(-q * dt);
 	for (int i = 0; i < m; i++) {
 		Y_new_[i] = c * Y_new_[i];
 	}
-}
-
-int UniformizationMethod::calcNMax(double q, double dt)
-{
-	int N;
-	double c = exp(-q * dt);
-	double sum = 1.0, coeff = 1.0;
-
-	for (N = 1; N < 500; N++) {
-		coeff *= q * dt / (double)N;
-		sum += coeff;
-
-		if (tol > (1.0 - c * sum)) return N;
-	}
-
-	return N;
 }
