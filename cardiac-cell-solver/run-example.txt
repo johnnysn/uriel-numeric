@@ -1,5 +1,5 @@
 // To simulate the ten Tusscher 2004 model using the Rush-Larsen method:
-./cardiac-cell-solver --method=0 --model=0 --dt=0.01 --tf=1000 --dt_save=1
+./bin/cardiac-cell-solver --method=0 --model=0 --dt=0.01 --tf=1000 --dt_save=1
 
 // To simulate the ten Tusscher 2004 model using the adaptive Rush-Larsen method:
-./cardiac-cell-solver --method=1 --model=0 --dt=0.01 --tf=1000 --dt_save=1 --dt_max=0.1 --rel_tol=0.02
+./bin/cardiac-cell-solver --method=1 --model=0 --dt=0.01 --tf=1000 --dt_save=1 --dt_max=0.1 --rel_tol=0.02
