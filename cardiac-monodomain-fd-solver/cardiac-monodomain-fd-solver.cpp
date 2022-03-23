@@ -4,7 +4,9 @@
 #include <iostream>
 #include "model/electrophysiology/Fox2002.h"
 #include "model/electrophysiology/Tusscher2004.h"
+#include "model/electrophysiology/Bondarenko2004.h"
 #include "method/ode/RushLarsenMethod.h"
+#include "method/ode/UniformizationMethod.h"
 #include "options/OptionParser.h"
 #include <chrono>
 #include <omp.h>
@@ -21,9 +23,24 @@ long offset(long xi, long yi)
 	return (Nx * yi + xi) * model->nStates;
 }
 
+void deleteStructures(double* Y_old_, double* Y_new_, double* ALGS, double* RHS, double* PARAMS, double** Tr)
+{
+	delete[] Y_old_;
+	delete[] Y_new_;
+	delete[] ALGS;
+	delete[] RHS;
+	delete[] PARAMS;
+	if (Tr != NULL) {
+		for (int i = 0; i < Nx * Ny * model->nStates_MKM_max; ++i) delete[] Tr[i];
+		delete[] Tr;
+	}
+}
+
+
 int main(int argc, char** argv)
 {
 	OptionParser::addOption("model", "Model: 0 -> ten Tusscher 2004, 1 -> Fox 2002");
+	OptionParser::addOption("method", "Method: 0 -> Rush Larsen Method, 1 -> Uniformization Method");
 	OptionParser::addOption("dt", "Base time step.");
 	OptionParser::addOption("dt_save", "Time step for saving.");
 	OptionParser::addOption("tf", "Final time");
@@ -36,6 +53,7 @@ int main(int argc, char** argv)
 	OptionParser::parseOptions(argc, argv);
 
 	int model_index = OptionParser::parseInt("model");
+	int method_index = OptionParser::parseInt("method");
 	int num_threads = OptionParser::foundOption("threads") ? OptionParser::parseInt("threads") : 1;
 	double dt = OptionParser::foundOption("dt") ? OptionParser::parseDouble("dt") : 0.02;
 	double dt_save = OptionParser::foundOption("dt_save") ? OptionParser::parseDouble("dt_save") : 1;
@@ -54,11 +72,22 @@ int main(int argc, char** argv)
 		model = new Tusscher2004();
 	} else if (model_index == 1) {
 		model = new Fox2002();
+	} else if (model_index == 2) {
+		model = new Bondarenko2004();
 	} else {
-		return -1;
+		cout << "Invalid model index." << endl;
+		return EXIT_FAILURE;
 	}
 
-	ODEMethod* method = new RushLarsenMethod();
+	ODEMethod* method;
+	if (method_index == 0) {
+		method = new RushLarsenMethod();
+	} else if (method_index == 1) {
+		method = new UniformizationMethod();
+	} else {
+		cout << "Invalid method index." << endl;
+		return EXIT_FAILURE;
+	}
 
 	Nx = Lx / dx;
 	Ny = Ly / dy;
@@ -67,6 +96,13 @@ int main(int argc, char** argv)
 	double* Y_new_ = new double [Nx * Ny * model->nStates];
 	double* ALGS = new double [Nx * Ny * model->nAlgs]; double* PARAMS = new double [Nx * Ny * model->nParams];
 	double* RHS = new double [Nx * Ny * (model->nStates + model->nStates_HH)];
+
+	double** Tr = NULL;
+	if (model->nStates_MKM_max > 0) {
+		Tr = new double* [Nx * Ny * model->nStates_MKM_max];
+		for (int i = 0; i < Nx * Ny * model->nStates_MKM_max; ++i)
+			Tr[i] = new double[model->nStates_MKM_max];
+	}
 
 	double t = 0, t_save = 0;
 
@@ -92,12 +128,13 @@ int main(int argc, char** argv)
 					double* y_new_ = &(Y_new_[m]); double* y_old_ = &(Y_old_[m]);
 					double* algs = &(ALGS[k * model->nAlgs]); double* params = &(PARAMS[k * model->nParams]);
 					double* rhs = &(RHS[k * (model->nStates + model->nStates_HH)]);
+					double** tr = Tr != NULL ? &(Tr[k * model->nStates_MKM_max]) : NULL;
 
 					// Stimulus
 					double x = xi * dx, y = yi * dy;
 					params[0] = (t > 1 && t < 3 && x > 0 && x < 0.1) ? 1 : -1;
 
-					method->step(y_new_, model, params, algs, rhs, y_old_, t, dt);
+					method->step(y_new_, model, params, algs, rhs, y_old_, t, dt, tr);
 
 					//Laplacian term
 					y_new_[0] += sigma_x / (Cm * chi) * dt / (dx * dx) *
@@ -125,6 +162,8 @@ int main(int argc, char** argv)
 
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> elapsed = finish - start;
+
+	deleteStructures(Y_old_, Y_new_, ALGS, RHS, PARAMS, Tr);
 
     std::cout << "Simulation finished in " << elapsed.count() << " s." << std::endl;
 }
