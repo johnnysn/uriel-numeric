@@ -11,8 +11,8 @@ add_definitions( -Wall -O3 -std=c++11 )
 ADD_LIBRARY( uriel-tools STATIC ${SOURCES} )
 set_target_properties(uriel-tools
     PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY "release"
-    LIBRARY_OUTPUT_DIRECTORY "release"
-    RUNTIME_OUTPUT_DIRECTORY "release"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/release"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/release"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/release"
 )
 target_compile_definitions(uriel-tools PUBLIC LINUXOS)

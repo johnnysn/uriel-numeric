@@ -5,6 +5,8 @@
 #include "model/electrophysiology/Fox2002.h"
 #include "model/electrophysiology/Tusscher2004.h"
 #include "model/electrophysiology/Bondarenko2004.h"
+#include "model/electrophysiology/Noble1962.h"
+#include "model/electrophysiology/ToRORd_fkatp_2019.h"
 #include "method/ode/RushLarsenAdaptiveMethod.h"
 #include "method/ode/ForwardEulerAdaptiveMethod.h"
 #include "method/ode/RushLarsenMethod.h"
@@ -25,7 +27,7 @@ void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_
 
 int main(int argc, char** argv)
 {
-	OptionParser::addOption("model", "Model: 0 -> ten Tusscher 2004, 1 -> Fox 2002, 2 -> Bondarenko 2004");
+	OptionParser::addOption("model", "Model: 0 -> ten Tusscher 2004, 1 -> Fox 2002, 2 -> Bondarenko 2004, 3 -> Noble 1962, 4 -> ToRORd_fkatp_2019");
 	OptionParser::addOption("method", "Method: 0 -> Euler, 1 -> Rush Larsen, 2 -> Euler ADP, 3 -> Rush Larsen ADP, 4 -> UNI (not functional yet)");
 	OptionParser::addOption("dt", "Base time step.");
 	OptionParser::addOption("dt_save", "Time step for saving.");
@@ -49,7 +51,12 @@ int main(int argc, char** argv)
 		model = new Fox2002();
 	} else if (model_index == 2) {
 		model = new Bondarenko2004();
-	} else {
+	} else if (model_index == 3) {
+		model = new Noble1962();
+	} else if (model_index == 4) {
+		model = new ToRORd_fkatp_2019();
+	}
+	  else {
 		return -1;
 	}
 
@@ -76,7 +83,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-    cout << "Simulation has ended.\n";
+    //cout << "Simulation has ended.\n";
 	return 0;
 }
 
@@ -109,7 +116,8 @@ void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, 
 
 		t_save += dt;
 		if (t_save >= dt_save) {
-			cout << "t = " << t + dt << ", V = " << Y_new_[0] << endl;
+			//cout << "t = " << t + dt << ", V = " << Y_new_[0] << endl;
+			cout << t + dt << " " << Y_new_[0] << endl;
 			t_save = 0;
 		}
 	}
@@ -142,7 +150,8 @@ void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_
 
 		t_save += dt;
 		if (t_save >= dt_save) {
-			cout << "t = " << t + dt << ", V = " << Y_new_[0] << endl;
+			//cout << "t = " << t + dt << ", V = " << Y_new_[0] << endl;
+			cout << t + dt << " " << Y_new_[0] << endl;
 			t_save = 0;
 		}
 	}
