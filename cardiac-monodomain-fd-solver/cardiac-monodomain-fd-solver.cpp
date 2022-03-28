@@ -39,7 +39,7 @@ void deleteStructures(double* Y_old_, double* Y_new_, double* ALGS, double* RHS,
 
 int main(int argc, char** argv)
 {
-	OptionParser::addOption("model", "Model: 0 -> ten Tusscher 2004, 1 -> Fox 2002");
+	OptionParser::addOption("model", "Model: 0 -> ten Tusscher 2004, 1 -> Fox 2002, 2 -> Bondarenko 2004");
 	OptionParser::addOption("method", "Method: 0 -> Rush Larsen Method, 1 -> Uniformization Method");
 	OptionParser::addOption("dt", "Base time step.");
 	OptionParser::addOption("dt_save", "Time step for saving.");
