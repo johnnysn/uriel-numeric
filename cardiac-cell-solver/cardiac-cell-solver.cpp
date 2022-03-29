@@ -10,6 +10,7 @@
 #include "method/ode/RushLarsenMethod.h"
 #include "method/ode/UniformizationMethod.h"
 #include "method/ode/ForwardEulerMethod.h"
+#include "output/DummyPrinter.h"
 #include "options/OptionParser.h"
 
 #define METHOD_EULER 0
@@ -20,13 +21,13 @@
 
 using namespace std;
 
-void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf);
-void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, double tf, double dt_max, double rel_tol);
+void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf, SolutionPrinter* printer);
+void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, SolutionPrinter* printer, double tf, double dt_max, double rel_tol);
 
 int main(int argc, char** argv)
 {
 	OptionParser::addOption("model", "Model: 0 -> ten Tusscher 2004, 1 -> Fox 2002, 2 -> Bondarenko 2004");
-	OptionParser::addOption("method", "Method: 0 -> Euler, 1 -> Rush Larsen, 2 -> Euler ADP, 3 -> Rush Larsen ADP, 4 -> UNI (not functional yet)");
+	OptionParser::addOption("method", "Method: 0 -> Euler, 1 -> Rush Larsen, 2 -> Euler ADP, 3 -> Rush Larsen ADP, 4 -> UNI");
 	OptionParser::addOption("dt", "Base time step.");
 	OptionParser::addOption("dt_save", "Time step for saving.");
 	OptionParser::addOption("tf", "Final time");
@@ -50,15 +51,18 @@ int main(int argc, char** argv)
 	} else if (model_index == 2) {
 		model = new Bondarenko2004();
 	} else {
-		return -1;
+		cout << "Invalid model index." << endl;
+		return EXIT_FAILURE;
 	}
 
+	SolutionPrinter* printer = new DummyPrinter();
+
 	if (method_index == METHOD_EULER) {
-		solveFixed(new ForwardEulerMethod(), model, dt, dt_save, tf);
+		solveFixed(new ForwardEulerMethod(), model, dt, dt_save, tf, printer);
 	} else if (method_index == METHOD_RL) {
-		solveFixed(new RushLarsenMethod(), model, dt, dt_save, tf);
+		solveFixed(new RushLarsenMethod(), model, dt, dt_save, tf, printer);
 	} else if (method_index == METHOD_UNI) {
-		solveFixed(new UniformizationMethod(), model, dt, dt_save, tf);
+		solveFixed(new UniformizationMethod(), model, dt, dt_save, tf, printer);
 	} else if (method_index == METHOD_ARL || method_index == METHOD_AEULER) {
 		double dt_max, rel_tol;
 		if (OptionParser::foundOption("dt_max")) dt_max = OptionParser::parseDouble("dt_max");
@@ -71,16 +75,17 @@ int main(int argc, char** argv)
 		if (method_index == METHOD_ARL) method = new RushLarsenAdaptiveMethod();
 		else method = new ForwardEulerAdaptiveMethod();
 
-		solveADP(method, model, dt, dt_save, tf, rel_tol, dt_max);
+		solveADP(method, model, dt, dt_save, printer, tf, rel_tol, dt_max);
 	} else {
-		return -1;
+		cout << "Invalid method index." << endl;
+		return EXIT_FAILURE;
 	}
 
     cout << "Simulation has ended.\n";
 	return 0;
 }
 
-void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf) {
+void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf, SolutionPrinter* printer) {
 
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
@@ -109,13 +114,13 @@ void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, 
 
 		t_save += dt;
 		if (t_save >= dt_save) {
-			cout << "t = " << t + dt << ", V = " << Y_new_[0] << endl;
+			printer->printNode(0, t + dt, 1, Y_new_);
 			t_save = 0;
 		}
 	}
 }
 
-void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, double tf, double rel_tol, double dt_max) {
+void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, SolutionPrinter* printer, double tf, double rel_tol, double dt_max) {
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
 
@@ -142,7 +147,7 @@ void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_
 
 		t_save += dt;
 		if (t_save >= dt_save) {
-			cout << "t = " << t + dt << ", V = " << Y_new_[0] << endl;
+			printer->printNode(0, t + dt, 1, Y_new_);
 			t_save = 0;
 		}
 	}
