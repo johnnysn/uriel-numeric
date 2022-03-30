@@ -11,6 +11,7 @@
 #include "method/ode/UniformizationMethod.h"
 #include "method/ode/ForwardEulerMethod.h"
 #include "output/DummyPrinter.h"
+#include "output/SingleFilePrinter.h"
 #include "options/OptionParser.h"
 
 #define METHOD_EULER 0
@@ -33,6 +34,7 @@ int main(int argc, char** argv)
 	OptionParser::addOption("tf", "Final time");
 	OptionParser::addOption("dt_max", "Maximum time step for adaptive solvers.");
 	OptionParser::addOption("rel_tol", "Relative tolerance for adaptive solvers.");
+	OptionParser::addOption("outputFile", "Filename for printing output");
 
 	OptionParser::parseOptions(argc, argv);
 
@@ -55,7 +57,11 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	SolutionPrinter* printer = new DummyPrinter();
+	SolutionPrinter* printer;
+	if (OptionParser::foundOption("outputFile"))
+		printer = new SingleFilePrinter(OptionParser::optionValue("outputFile"));
+	else
+		printer = new DummyPrinter();
 
 	if (method_index == METHOD_EULER) {
 		solveFixed(new ForwardEulerMethod(), model, dt, dt_save, tf, printer);
@@ -81,11 +87,13 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
+	delete printer;
     cout << "Simulation has ended.\n";
 	return 0;
 }
 
-void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf, SolutionPrinter* printer) {
+void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf, SolutionPrinter* printer)
+{
 
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
@@ -120,7 +128,8 @@ void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, 
 	}
 }
 
-void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, SolutionPrinter* printer, double tf, double rel_tol, double dt_max) {
+void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, SolutionPrinter* printer, double tf, double rel_tol, double dt_max)
+{
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
 

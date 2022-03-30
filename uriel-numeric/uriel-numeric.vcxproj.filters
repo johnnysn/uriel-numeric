@@ -108,6 +108,9 @@
     <ClInclude Include="include\output\DummyPrinter.h">
       <Filter>Arquivos de Cabeçalho\output</Filter>
     </ClInclude>
+    <ClInclude Include="include\output\SingleFilePrinter.h">
+      <Filter>Arquivos de Cabeçalho\output</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\model\Model.cpp">
@@ -144,6 +147,9 @@
       <Filter>Arquivos de Origem\model\electrophysiology</Filter>
     </ClCompile>
     <ClCompile Include="source\output\DummyPrinter.cpp">
+      <Filter>Arquivos de Origem\output</Filter>
+    </ClCompile>
+    <ClCompile Include="source\output\SingleFilePrinter.cpp">
       <Filter>Arquivos de Origem\output</Filter>
     </ClCompile>
   </ItemGroup>

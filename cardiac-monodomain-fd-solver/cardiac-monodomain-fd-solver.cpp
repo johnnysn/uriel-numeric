@@ -8,6 +8,8 @@
 #include "method/ode/RushLarsenMethod.h"
 #include "method/ode/UniformizationMethod.h"
 #include "options/OptionParser.h"
+#include "output/DummyPrinter.h"
+#include "output/SingleFilePrinter.h"
 #include <chrono>
 #include <omp.h>
 
@@ -49,6 +51,7 @@ int main(int argc, char** argv)
 	OptionParser::addOption("Lx", "Horizontal length in cm");
 	OptionParser::addOption("Ly", "Vertical length in cm");
 	OptionParser::addOption("threads", "Number of threads");
+	OptionParser::addOption("outputFile", "Filename for printing output");
 
 	OptionParser::parseOptions(argc, argv);
 
@@ -106,6 +109,12 @@ int main(int argc, char** argv)
 
 	double t = 0, t_save = 0;
 
+	SolutionPrinter* printer;
+	if (OptionParser::foundOption("outputFile"))
+		printer = new SingleFilePrinter(OptionParser::optionValue("outputFile"));
+	else
+		printer = new DummyPrinter();
+
 	auto start = std::chrono::high_resolution_clock::now();
 
 	#pragma omp parallel 
@@ -153,7 +162,7 @@ int main(int argc, char** argv)
 				t += dt;
 				t_save += dt;
 				if (t_save >= dt_save) {
-					cout << "t = " << t << ", V(x0) = " << Y_old_[0] << ", V(xf) = " << Y_old_[(Nx * Ny - 1) * model->nStates] << endl;
+					printer->printNodes(t, 2, (Nx*Ny - 1)*model->nStates, 1, Y_old_);
 					t_save = 0;
 				}
 			}
@@ -163,6 +172,7 @@ int main(int argc, char** argv)
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> elapsed = finish - start;
 
+	delete printer;
 	deleteStructures(Y_old_, Y_new_, ALGS, RHS, PARAMS, Tr);
 
     std::cout << "Simulation finished in " << elapsed.count() << " s." << std::endl;
