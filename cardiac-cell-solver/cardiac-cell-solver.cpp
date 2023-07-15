@@ -13,6 +13,7 @@
 #include "output/DummyPrinter.h"
 #include "output/SingleFilePrinter.h"
 #include "options/OptionParser.h"
+#include "options/IndexedValue.h"
 
 #define METHOD_EULER 0
 #define METHOD_RL 1
@@ -22,8 +23,8 @@
 
 using namespace std;
 
-void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf, SolutionPrinter* printer);
-void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, SolutionPrinter* printer, double tf, double dt_max, double rel_tol);
+void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf, SolutionPrinter* printer, vector<IndexedValue> parameters);
+void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, SolutionPrinter* printer, double tf, double dt_max, double rel_tol, vector<IndexedValue> parameters);
 
 int main(int argc, char** argv)
 {
@@ -35,6 +36,7 @@ int main(int argc, char** argv)
 	OptionParser::addOption("dt_max", "Maximum time step for adaptive solvers.");
 	OptionParser::addOption("rel_tol", "Relative tolerance for adaptive solvers.");
 	OptionParser::addOption("outputFile", "Filename for printing output");
+	OptionParser::addOption("parameters", "Set extra parameters");
 
 	OptionParser::parseOptions(argc, argv);
 
@@ -44,6 +46,16 @@ int main(int argc, char** argv)
 	double dt = OptionParser::foundOption("dt") ? OptionParser::parseDouble("dt") : 0.01;
 	double dt_save = OptionParser::foundOption("dt_save") ? OptionParser::parseDouble("dt_save") : 1;
 	double tf = OptionParser::foundOption("tf") ? OptionParser::parseDouble("tf") : 400;
+
+	vector<IndexedValue> parameters;
+	if (OptionParser::foundOption("parameters")) {
+		string parameters_str = OptionParser::optionValue("parameters");
+		parameters = OptionParser::parseIndexedValues("parameters");
+		cout << parameters_str << endl;
+		for (unsigned int i = 0; i < parameters.size(); i++) {
+			cout << parameters[i].index << ": " << parameters[i].value << endl;
+		}
+	}
 
 	CellModel* model;
 	if (model_index == 0) {
@@ -64,11 +76,11 @@ int main(int argc, char** argv)
 		printer = new DummyPrinter();
 
 	if (method_index == METHOD_EULER) {
-		solveFixed(new ForwardEulerMethod(), model, dt, dt_save, tf, printer);
+		solveFixed(new ForwardEulerMethod(), model, dt, dt_save, tf, printer, parameters);
 	} else if (method_index == METHOD_RL) {
-		solveFixed(new RushLarsenMethod(), model, dt, dt_save, tf, printer);
+		solveFixed(new RushLarsenMethod(), model, dt, dt_save, tf, printer, parameters);
 	} else if (method_index == METHOD_UNI) {
-		solveFixed(new UniformizationMethod(), model, dt, dt_save, tf, printer);
+		solveFixed(new UniformizationMethod(), model, dt, dt_save, tf, printer, parameters);
 	} else if (method_index == METHOD_ARL || method_index == METHOD_AEULER) {
 		double dt_max, rel_tol;
 		if (OptionParser::foundOption("dt_max")) dt_max = OptionParser::parseDouble("dt_max");
@@ -81,7 +93,7 @@ int main(int argc, char** argv)
 		if (method_index == METHOD_ARL) method = new RushLarsenAdaptiveMethod();
 		else method = new ForwardEulerAdaptiveMethod();
 
-		solveADP(method, model, dt, dt_save, printer, tf, rel_tol, dt_max);
+		solveADP(method, model, dt, dt_save, printer, tf, rel_tol, dt_max, parameters);
 	} else {
 		cout << "Invalid method index." << endl;
 		return EXIT_FAILURE;
@@ -92,7 +104,7 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf, SolutionPrinter* printer)
+void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, double tf, SolutionPrinter* printer, vector<IndexedValue> parameters)
 {
 
 	double* Y_old_ = new double[model->nStates];
@@ -113,6 +125,9 @@ void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, 
 
 	model->set_default_initial_state(Y_old_);
 	model->set_default_parameters(params);
+	for (unsigned int i = 0; i < parameters.size(); i++) {
+		params[parameters[i].index] = parameters[i].value;
+	}
 
 	double t_save = 0; 
 	for (double t = 0; t <= tf; t += dt) {
@@ -128,7 +143,7 @@ void solveFixed(ODEMethod* method, CellModel* model, double dt, double dt_save, 
 	}
 }
 
-void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, SolutionPrinter* printer, double tf, double rel_tol, double dt_max)
+void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_save, SolutionPrinter* printer, double tf, double rel_tol, double dt_max, vector<IndexedValue> parameters)
 {
 	double* Y_old_ = new double[model->nStates];
 	double* Y_new_ = new double[model->nStates];
@@ -141,6 +156,10 @@ void solveADP(ODEAdaptiveMethod* method, CellModel* model, double dt, double dt_
 
 	model->set_default_initial_state(Y_old_);
 	model->set_default_parameters(params);
+	for (unsigned int i = 0; i < parameters.size(); i++) {
+		params[parameters[i].index] = parameters[i].value;
+	}
+
 	method->prepare(model, params, algs, rhs, Y_old_, 0);
 
 	double t_save = 0; double dt_new;
