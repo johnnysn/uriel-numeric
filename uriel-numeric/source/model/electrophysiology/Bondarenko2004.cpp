@@ -436,3 +436,54 @@ void Bondarenko2004::calc_mk_transitions(double** Tr, int mk_index, double* pars
             break;
     }
 }
+
+bool Bondarenko2004::has_single_rhs_formula(int i) {
+    return i <= 2;
+}
+	
+double Bondarenko2004::calc_single_rhs_formula(int i, double* pars, double* Y_old_, double t) {
+    if (i == 0) {
+        double c_i_stim = calc_stimulus(pars, t);
+        double c_i_CaL = (g_CaL*O_old_*(V_old_-E_CaL));
+        double c_i_pCa = ((i_pCa_max*pow(Cai_old_,2.000000000000000e+00))/(pow(Km_pCa,2.000000000000000e+00)+pow(Cai_old_,2.000000000000000e+00)));
+        double c_i_NaCa = (((((((k_NaCa*1.000000000000000e+00)/(pow(K_mNa,3.000000000000000e+00)+pow(Nao,3.000000000000000e+00)))*1.000000000000000e+00)/(K_mCa+Cao))*1.000000000000000e+00)/(1.000000000000000e+00+(k_sat*exp((((eta-1.000000000000000e+00)*V_old_*F)/(R*T))))))*((exp(((eta*V_old_*F)/(R*T)))*pow(Nai_old_,3.000000000000000e+00)*Cao)-(exp((((eta-1.000000000000000e+00)*V_old_*F)/(R*T)))*pow(Nao,3.000000000000000e+00)*Cai_old_)));
+        double c_E_CaN = (((R*T)/(2.000000000000000e+00*F))*log((Cao/Cai_old_)));
+        double c_E_Na = (((R*T)/F)*log((((9.000000000000000e-01*Nao)+(1.000000000000000e-01*Ko))/((9.000000000000000e-01*Nai_old_)+(1.000000000000000e-01*Ki_old_)))));
+        double c_E_K = (((R*T)/F)*log((Ko/Ki_old_)));
+        double c_i_Kr = (g_Kr*O_K_old_*(V_old_-(((R*T)/F)*log((((9.800000000000000e-01*Ko)+(2.000000000000000e-02*Nao))/((9.800000000000000e-01*Ki_old_)+(2.000000000000000e-02*Nai_old_)))))));
+        double c_sigma = ((1.000000000000000e+00/7.000000000000000e+00)*(exp((Nao/6.730000000000000e+04))-1.000000000000000e+00));
+        double c_O_ClCa = (2.000000000000000e-01/(1.000000000000000e+00+exp(((-(V_old_-4.670000000000000e+01))/7.800000000000000e+00))));
+        double c_i_Nab = (g_Nab*(V_old_-c_E_Na));
+        double c_i_Kto_s = (g_Kto_s*ato_s_old_*ito_s_old_*(V_old_-c_E_K));
+        double c_i_K1 = ((((2.938000000000000e-01*Ko)/(Ko+2.100000000000000e+02))*(V_old_-c_E_K))/(1.000000000000000e+00+exp((8.960000000000000e-02*(V_old_-c_E_K)))));
+        double c_i_Ks = (g_Ks*pow(nKs_old_,2.000000000000000e+00)*(V_old_-c_E_K));
+        double c_i_Kur = (g_Kur*aur_old_*iur_old_*(V_old_-c_E_K));
+        double c_i_Kss = (g_Kss*aKss_old_*iKss_old_*(V_old_-c_E_K));
+        double c_i_Cab = (g_Cab*(V_old_-c_E_CaN));
+        double c_i_Na = (g_Na*O_Na_old_*(V_old_-c_E_Na));
+        double c_i_Kto_f = (g_Kto_f*pow(ato_f_old_,3.000000000000000e+00)*ito_f_old_*(V_old_-c_E_K));
+        double c_f_NaK = (1.000000000000000e+00/(1.000000000000000e+00+(1.245000000000000e-01*exp((((-1.000000000000000e-01)*V_old_*F)/(R*T))))+(3.650000000000000e-02*c_sigma*exp((((-V_old_)*F)/(R*T))))));
+        double c_i_ClCa = (((g_ClCa*c_O_ClCa*Cai_old_)/(Cai_old_+Km_Cl))*(V_old_-E_Cl));
+        double c_i_NaK = ((((i_NaK_max*c_f_NaK*1.000000000000000e+00)/(1.000000000000000e+00+pow((Km_Nai/Nai_old_),1.500000000000000e+00)))*Ko)/(Ko+Km_Ko));
+        return ((-(c_i_CaL+c_i_pCa+c_i_NaCa+c_i_Cab+c_i_Na+c_i_Nab+c_i_NaK+c_i_Kto_f+c_i_Kto_s+c_i_K1+c_i_Ks+c_i_Kur+c_i_Kss+c_i_Kr+c_i_ClCa+c_i_stim)));
+    } else if (i == 1) {
+        double c_Bi = pow((1.000000000000000e+00+((CMDN_tot*Km_CMDN)/pow((Km_CMDN+Cai_old_),2.000000000000000e+00))),(-1.000000000000000e+00));
+        double c_J_xfer = ((Cass_old_-Cai_old_)/tau_xfer);
+        double c_J_leak = (v2*(CaNSR_old_-Cai_old_));
+        double c_J_up = ((v3*pow(Cai_old_,2.000000000000000e+00))/(pow(Km_up,2.000000000000000e+00)+pow(Cai_old_,2.000000000000000e+00)));
+        double c_J_trpn = (((k_plus_htrpn*Cai_old_*(HTRPN_tot-HTRPN_Ca_old_))+(k_plus_ltrpn*Cai_old_*(LTRPN_tot-LTRPN_Ca_old_)))-((k_minus_htrpn*HTRPN_Ca_old_)+(k_minus_ltrpn*LTRPN_Ca_old_)));
+        double c_i_pCa = ((i_pCa_max*pow(Cai_old_,2.000000000000000e+00))/(pow(Km_pCa,2.000000000000000e+00)+pow(Cai_old_,2.000000000000000e+00)));
+        double c_i_NaCa = (((((((k_NaCa*1.000000000000000e+00)/(pow(K_mNa,3.000000000000000e+00)+pow(Nao,3.000000000000000e+00)))*1.000000000000000e+00)/(K_mCa+Cao))*1.000000000000000e+00)/(1.000000000000000e+00+(k_sat*exp((((eta-1.000000000000000e+00)*V_old_*F)/(R*T))))))*((exp(((eta*V_old_*F)/(R*T)))*pow(Nai_old_,3.000000000000000e+00)*Cao)-(exp((((eta-1.000000000000000e+00)*V_old_*F)/(R*T)))*pow(Nao,3.000000000000000e+00)*Cai_old_)));
+        double c_E_CaN = (((R*T)/(2.000000000000000e+00*F))*log((Cao/Cai_old_)));
+        double c_i_Cab = (g_Cab*(V_old_-c_E_CaN));
+        return ((c_Bi*((c_J_leak+c_J_xfer)-(c_J_up+c_J_trpn+((((c_i_Cab+c_i_pCa)-(2.000000000000000e+00*c_i_NaCa))*Acap*Cm)/(2.000000000000000e+00*Vmyo*F))))));
+    } else if (i == 2) {
+        double c_Bss = pow((1.0+((CMDN_tot*Km_CMDN)/pow((Km_CMDN+Cass_old_),2.0))),(-1.0));
+        double c_J_rel = (v1*(P_O1_old_+P_O2_old_)*(CaJSR_old_-Cass_old_)*P_RyR_old_);
+        double c_J_xfer = ((Cass_old_-Cai_old_)/tau_xfer);
+        double c_i_CaL = (g_CaL*O_old_*(V_old_-E_CaL));
+        return ((c_Bss*(((c_J_rel*VJSR)/Vss)-(((c_J_xfer*Vmyo)/Vss)+((c_i_CaL*Acap*Cm)/(2.0*Vss*F))))));
+    }
+
+    return 0;
+}

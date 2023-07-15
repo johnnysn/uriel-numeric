@@ -46,6 +46,9 @@ public:
 	virtual void set_default_parameters(double* pars) = 0;
 	virtual void set_default_initial_state(double* Y_old_) = 0;
 
+	virtual bool has_single_rhs_formula(int i) { return false; };
+	virtual double calc_single_rhs_formula(int i, double* pars, double* Y_old_, double t) { return 0; };
+
 	const int NLStart; const int NLEnd;
 	const int HHStart; const int HHEnd;
 	const int MKStart; const int MKEnd;

@@ -20,4 +20,7 @@ public:
 	void set_default_initial_state(double* Y_old_);
 
 	double calc_stimulus(double* pars, double t);
+
+	bool has_single_rhs_formula(int i);
+	double calc_single_rhs_formula(int i, double* pars, double* Y_old_, double t);
 };
