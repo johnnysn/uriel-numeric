@@ -118,10 +118,6 @@ void Tusscher2004::calc_rhs_hh(double* rhs, double* pars, double* algs, double* 
 	g_f_ = (calc_g_inf > g_old_&&V_old_ > -6.0e+01) ? 0.0 : calc_d_g;	// 78
 }
 
-void Tusscher2004::calc_rhs_mk(double* rhs, double* pars, double* algs, double* Y_old_, double t)
-{
-}
-
 void Tusscher2004::calc_hh_coeff(double* a, double* b, double* pars, double* algs, double* Y_old_, double t)
 {
 	calc_algs_hh(algs, pars, Y_old_, t);
@@ -249,6 +245,3 @@ double Tusscher2004::calc_stimulus(double* pars, double t)
 	}
 	else return 0;
 }
-
-void Tusscher2004::prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t) {}
-void Tusscher2004::calc_mk_transitions(double** Tr, int mk_index, double* pars, double* algs, double* Y_old_, double t) {}

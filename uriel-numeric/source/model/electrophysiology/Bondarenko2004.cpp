@@ -236,39 +236,6 @@ void Bondarenko2004::calc_rhs_hh(double* rhs, double* pars, double* algs, double
     aKss_f_ = (((calc_ass - aKss_old_) / calc_tau_Kss));	// 93
 }
 
-void Bondarenko2004::calc_rhs_mk(double* rhs, double* pars, double* algs, double* Y_old_, double t)
-{
-    prep_mk_transitions(algs, pars, Y_old_, t);
-
-    P_O1_f_ = ((((k_plus_a * pow(Cass_old_, n) * P_C1_old_) + (k_minus_b * P_O2_old_) + (k_minus_c * P_C2_old_)) - ((k_minus_a * P_O1_old_) + (k_plus_b * pow(Cass_old_, m) * P_O1_old_) + (k_plus_c * P_O1_old_))));	// 18
-    P_O2_f_ = (((k_plus_b * pow(Cass_old_, m) * P_O1_old_) - (k_minus_b * P_O2_old_)));	// 20
-    P_C2_f_ = (((k_plus_c * P_O1_old_) - (k_minus_c * P_C2_old_)));	// 21
-    O_f_ = ((((calc_alpha * C4_old_) + (Kpcb * I1_old_) + (1.0e-03 * ((calc_alpha * I2_old_) - (calc_Kpcf * O_old_)))) - ((4.0e+00 * calc_beta * O_old_) + (calc_gamma * O_old_))));	// 23
-    C2_f_ = ((((4.0e+00 * calc_alpha * C1_old_) + (2.0e+00 * calc_beta * C3_old_)) - ((calc_beta * C2_old_) + (3.0e+00 * calc_alpha * C2_old_))));	// 25
-    C3_f_ = ((((3.0e+00 * calc_alpha * C2_old_) + (3.0e+00 * calc_beta * C4_old_)) - ((2.0e+00 * calc_beta * C3_old_) + (2.0e+00 * calc_alpha * C3_old_))));	// 26
-    C4_f_ = ((((2.0e+00 * calc_alpha * C3_old_) + (4.0e+00 * calc_beta * O_old_) + (1.0e-02 * ((4.0e+00 * Kpcb * calc_beta * I1_old_) - (calc_alpha * calc_gamma * C4_old_))) + (2.0e-03 * ((4.0e+00 * calc_beta * I2_old_) - (calc_Kpcf * C4_old_))) + (4.0e+00 * calc_beta * Kpcb * I3_old_)) - ((3.0e+00 * calc_beta * C4_old_) + (calc_alpha * C4_old_) + (1.0e+00 * calc_gamma * calc_Kpcf * C4_old_))));	// 27
-    I1_f_ = ((((calc_gamma * O_old_) + (1.0e-03 * ((calc_alpha * I3_old_) - (calc_Kpcf * I1_old_))) + (1.0e-02 * ((calc_alpha * calc_gamma * C4_old_) - (4.0e+00 * calc_beta * Kpcb * I1_old_)))) - (Kpcb * I1_old_)));	// 28
-    I2_f_ = ((((1.0e-03 * ((calc_Kpcf * O_old_) - (calc_alpha * I2_old_))) + (Kpcb * I3_old_) + (2.0e-03 * ((calc_Kpcf * C4_old_) - (4.0e+00 * calc_beta * I2_old_)))) - (calc_gamma * I2_old_)));	// 29
-    I3_f_ = ((((1.0e-03 * ((calc_Kpcf * I1_old_) - (calc_alpha * I3_old_))) + (calc_gamma * I2_old_) + (1.0e+00 * calc_gamma * calc_Kpcf * C4_old_)) - ((4.0e+00 * calc_beta * Kpcb * I3_old_) + (Kpcb * I3_old_))));	// 30
-    C_Na2_f_ = ((((calc_alpha_Na11 * C_Na3_old_) + (calc_beta_Na12 * C_Na1_old_) + (calc_alpha_Na3 * IC_Na2_old_)) - ((calc_beta_Na11 * C_Na2_old_) + (calc_alpha_Na12 * C_Na2_old_) + (calc_beta_Na3 * C_Na2_old_))));	// 43
-    C_Na1_f_ = ((((calc_alpha_Na12 * C_Na2_old_) + (calc_beta_Na13 * O_Na_old_) + (calc_alpha_Na3 * IF_Na_old_)) - ((calc_beta_Na12 * C_Na1_old_) + (calc_alpha_Na13 * C_Na1_old_) + (calc_beta_Na3 * C_Na1_old_))));	// 44
-    O_Na_f_ = ((((calc_alpha_Na13 * C_Na1_old_) + (calc_beta_Na2 * IF_Na_old_)) - ((calc_beta_Na13 * O_Na_old_) + (calc_alpha_Na2 * O_Na_old_))));	// 45
-    IF_Na_f_ = ((((calc_alpha_Na2 * O_Na_old_) + (calc_beta_Na3 * C_Na1_old_) + (calc_beta_Na4 * I1_Na_old_) + (calc_alpha_Na12 * IC_Na2_old_)) - ((calc_beta_Na2 * IF_Na_old_) + (calc_alpha_Na3 * IF_Na_old_) + (calc_alpha_Na4 * IF_Na_old_) + (calc_beta_Na12 * IF_Na_old_))));	// 46
-    I1_Na_f_ = ((((calc_alpha_Na4 * IF_Na_old_) + (calc_beta_Na5 * I2_Na_old_)) - ((calc_beta_Na4 * I1_Na_old_) + (calc_alpha_Na5 * I1_Na_old_))));	// 47
-    I2_Na_f_ = (((calc_alpha_Na5 * I1_Na_old_) - (calc_beta_Na5 * I2_Na_old_)));	// 48
-    IC_Na2_f_ = ((((calc_alpha_Na11 * IC_Na3_old_) + (calc_beta_Na12 * IF_Na_old_) + (calc_beta_Na3 * C_Na2_old_)) - ((calc_beta_Na11 * IC_Na2_old_) + (calc_alpha_Na12 * IC_Na2_old_) + (calc_alpha_Na3 * IC_Na2_old_))));	// 49
-    IC_Na3_f_ = ((((calc_beta_Na11 * IC_Na2_old_) + (calc_beta_Na3 * C_Na3_old_)) - ((calc_alpha_Na11 * IC_Na3_old_) + (calc_alpha_Na3 * IC_Na3_old_))));	// 50
-    C_K2_f_ = ((((kf * C_K1_old_) + (calc_beta_a1 * O_K_old_)) - ((kb * C_K2_old_) + (calc_alpha_a1 * C_K2_old_))));	// 98
-    C_K1_f_ = ((((calc_alpha_a0 * C_K0_old_) + (kb * C_K2_old_)) - ((calc_beta_a0 * C_K1_old_) + (kf * C_K1_old_))));	// 99
-    O_K_f_ = ((((calc_alpha_a1 * C_K2_old_) + (calc_beta_i_duplicated_rapid_delayed_rectifier_potassium_current * I_K_old_)) - ((calc_beta_a1 * O_K_old_) + (calc_alpha_i_duplicated_rapid_delayed_rectifier_potassium_current * O_K_old_))));	// 100
-    I_K_f_ = (((calc_alpha_i_duplicated_rapid_delayed_rectifier_potassium_current * O_K_old_) - (calc_beta_i_duplicated_rapid_delayed_rectifier_potassium_current * I_K_old_)));
-
-    P_C1_f_ = (1.0e+00 - (P_C2_f_ + P_O1_f_ + P_O2_f_));	//19
-    C1_f_ = (1.0e+00 - (O_f_ + C2_f_ + C3_f_ + C4_f_ + I1_f_ + I2_f_ + I3_f_));	//24
-    C_Na3_f_ = (1.0e+00 - (O_Na_f_ + C_Na1_f_ + C_Na2_f_ + IF_Na_f_ + I1_Na_f_ + I2_Na_f_ + IC_Na2_f_ + IC_Na3_f_));
-    C_K0_f_ = (1.0e+00 - (C_K1_f_ + C_K2_f_ + O_K_f_ + I_K_f_));
-}
-
 void Bondarenko2004::calc_hh_coeff(double* a, double* b, double* pars, double* algs, double* Y_old_, double t) 
 {
     calc_algs_hh(algs, pars, Y_old_, t);
@@ -292,36 +259,89 @@ void Bondarenko2004::calc_hh_coeff(double* a, double* b, double* pars, double* a
     aKss_b_ = calc_ass / calc_tau_Kss;	// 93
 }
 
-void Bondarenko2004::prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t) {
-    calc_alpha = ((4.0e-01 * exp(((V_old_ + 1.20e+01) / 1.0e+01)) * ((1.0e+00 + (7.0e-01 * exp(((-pow((V_old_ + 4.0e+01), 2.0e+00)) / 1.0e+01)))) - (7.50e-01 * exp(((-pow((V_old_ + 2.0e+01), 2.0e+00)) / 4.0e+02))))) / (1.0e+00 + (1.20e-01 * exp(((V_old_ + 1.20e+01) / 1.0e+01)))));	//31
-    calc_beta = (5.0e-02 * exp(((-(V_old_ + 1.20e+01)) / 1.30e+01)));	//32
-    calc_gamma = ((Kpc_max * Cass_old_) / (Kpc_half + Cass_old_));	//33
-    calc_Kpcf = (1.30e+01 * (1.0e+00 - exp(((-pow((V_old_ + 1.450e+01), 2.0e+00)) / 1.0e+02))));	//34
-    calc_alpha_Na11 = (3.8020e+00 / ((1.0270e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.70e+01))) + (2.0e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.50e+02)))));	//51
-    calc_alpha_Na12 = (3.8020e+00 / ((1.0270e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.50e+01))) + (2.30e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.50e+02)))));	//52
-    calc_alpha_Na13 = (3.8020e+00 / ((1.0270e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.20e+01))) + (2.50e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.50e+02)))));	//53
-    calc_beta_Na11 = (1.9170e-01 * exp(((-(V_old_ + 2.50e+00)) / 2.030e+01)));	//54
-    calc_beta_Na12 = (2.0e-01 * exp(((-(V_old_ - 2.50e+00)) / 2.030e+01)));	//55
-    calc_beta_Na13 = (2.20e-01 * exp(((-(V_old_ - 7.50e+00)) / 2.030e+01)));	//56
-    calc_alpha_Na3 = (7.0e-07 * exp(((-(V_old_ + 7.0e+00)) / 7.70e+00)));	//57
-    calc_beta_Na3 = (8.540000000000001e-03 + (2.0e-05 * V_old_));	//58
-    calc_alpha_Na2 = (1.0e+00 / ((1.884950e-01 * exp(((-(V_old_ + 7.0e+00)) / 1.660e+01))) + 3.939560e-01));	//59
-    calc_beta_Na2 = ((calc_alpha_Na13 * calc_alpha_Na2 * calc_alpha_Na3) / (calc_beta_Na13 * calc_beta_Na3));	//60
-    calc_alpha_Na4 = (calc_alpha_Na2 / 1.0e+03);	//61
-    calc_beta_Na4 = calc_alpha_Na3;	//62
-    calc_alpha_Na5 = (calc_alpha_Na2 / 9.50e+04);	//63
-    calc_beta_Na5 = (calc_alpha_Na3 / 5.0e+01);	//64
-    calc_alpha_a0 = (2.23480e-02 * exp((1.1760e-02 * V_old_)));	//102
-    calc_beta_a0 = (4.70020e-02 * exp(((-6.310e-02) * V_old_)));	//103
-    calc_alpha_a1 = (1.37330e-02 * exp((3.81980e-02 * V_old_)));	//104
-    calc_beta_a1 = (6.889999999999999e-05 * exp(((-4.1780e-02) * V_old_)));	//105
-    calc_alpha_i_duplicated_rapid_delayed_rectifier_potassium_current = (9.08210e-02 * exp((2.33910e-02 * (V_old_ + 5.0e+00))));	//106
-    calc_beta_i_duplicated_rapid_delayed_rectifier_potassium_current = (6.4970e-03 * exp(((-3.2680e-02) * (V_old_ + 5.0e+00))));	//107
+void Bondarenko2004::prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t, int mk_index) {
+    if (mk_index == 0 || mk_index == -1) {
+        calc_alpha_Na11 = (3.8020e+00 / ((1.0270e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.70e+01))) + (2.0e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.50e+02)))));	//51
+        calc_alpha_Na12 = (3.8020e+00 / ((1.0270e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.50e+01))) + (2.30e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.50e+02)))));	//52
+        calc_alpha_Na13 = (3.8020e+00 / ((1.0270e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.20e+01))) + (2.50e-01 * exp(((-(V_old_ + 2.50e+00)) / 1.50e+02)))));	//53
+        calc_beta_Na11 = (1.9170e-01 * exp(((-(V_old_ + 2.50e+00)) / 2.030e+01)));	//54
+        calc_beta_Na12 = (2.0e-01 * exp(((-(V_old_ - 2.50e+00)) / 2.030e+01)));	//55
+        calc_beta_Na13 = (2.20e-01 * exp(((-(V_old_ - 7.50e+00)) / 2.030e+01)));	//56
+        calc_alpha_Na3 = (7.0e-07 * exp(((-(V_old_ + 7.0e+00)) / 7.70e+00)));	//57
+        calc_beta_Na3 = (8.540000000000001e-03 + (2.0e-05 * V_old_));	//58
+        calc_alpha_Na2 = (1.0e+00 / ((1.884950e-01 * exp(((-(V_old_ + 7.0e+00)) / 1.660e+01))) + 3.939560e-01));	//59
+        calc_beta_Na2 = ((calc_alpha_Na13 * calc_alpha_Na2 * calc_alpha_Na3) / (calc_beta_Na13 * calc_beta_Na3));	//60
+        calc_alpha_Na4 = (calc_alpha_Na2 / 1.0e+03);	//61
+        calc_beta_Na4 = calc_alpha_Na3;	//62
+        calc_alpha_Na5 = (calc_alpha_Na2 / 9.50e+04);	//63
+        calc_beta_Na5 = (calc_alpha_Na3 / 5.0e+01);	//64
+        C_Na3_old_ = (1.0e+00 - (O_Na_old_ + C_Na1_old_ + C_Na2_old_ + IF_Na_old_ + I1_Na_old_ + I2_Na_old_ + IC_Na2_old_ + IC_Na3_old_));
+    }
 
-    P_C1_old_ = (1.0e+00 - (P_C2_old_ + P_O1_old_ + P_O2_old_));	//19
-    C1_old_ = (1.0e+00 - (O_old_ + C2_old_ + C3_old_ + C4_old_ + I1_old_ + I2_old_ + I3_old_));	//24
-    C_Na3_old_ = (1.0e+00 - (O_Na_old_ + C_Na1_old_ + C_Na2_old_ + IF_Na_old_ + I1_Na_old_ + I2_Na_old_ + IC_Na2_old_ + IC_Na3_old_));
-    C_K0_old_ = (1.0e+00 - (C_K1_old_ + C_K2_old_ + O_K_old_ + I_K_old_));
+    if (mk_index == 1 || mk_index == -1) {
+        calc_alpha = ((4.0e-01 * exp(((V_old_ + 1.20e+01) / 1.0e+01)) * ((1.0e+00 + (7.0e-01 * exp(((-pow((V_old_ + 4.0e+01), 2.0e+00)) / 1.0e+01)))) - (7.50e-01 * exp(((-pow((V_old_ + 2.0e+01), 2.0e+00)) / 4.0e+02))))) / (1.0e+00 + (1.20e-01 * exp(((V_old_ + 1.20e+01) / 1.0e+01)))));	//31
+        calc_beta = (5.0e-02 * exp(((-(V_old_ + 1.20e+01)) / 1.30e+01)));	//32
+        calc_gamma = ((Kpc_max * Cass_old_) / (Kpc_half + Cass_old_));	//33
+        calc_Kpcf = (1.30e+01 * (1.0e+00 - exp(((-pow((V_old_ + 1.450e+01), 2.0e+00)) / 1.0e+02))));	//34
+        C1_old_ = (1.0e+00 - (O_old_ + C2_old_ + C3_old_ + C4_old_ + I1_old_ + I2_old_ + I3_old_));	//24
+    }
+
+    if (mk_index == 2 || mk_index == -1) {
+        calc_alpha_a0 = (2.23480e-02 * exp((1.1760e-02 * V_old_)));	//102
+        calc_beta_a0 = (4.70020e-02 * exp(((-6.310e-02) * V_old_)));	//103
+        calc_alpha_a1 = (1.37330e-02 * exp((3.81980e-02 * V_old_)));	//104
+        calc_beta_a1 = (6.889999999999999e-05 * exp(((-4.1780e-02) * V_old_)));	//105
+        calc_alpha_i_duplicated_rapid_delayed_rectifier_potassium_current = (9.08210e-02 * exp((2.33910e-02 * (V_old_ + 5.0e+00))));	//106
+        calc_beta_i_duplicated_rapid_delayed_rectifier_potassium_current = (6.4970e-03 * exp(((-3.2680e-02) * (V_old_ + 5.0e+00))));	//107
+        C_K0_old_ = (1.0e+00 - (C_K1_old_ + C_K2_old_ + O_K_old_ + I_K_old_));
+    }
+
+    if (mk_index == 3 || mk_index == -1) {
+        P_C1_old_ = (1.0e+00 - (P_C2_old_ + P_O1_old_ + P_O2_old_));	//19
+    }
+}
+
+void Bondarenko2004::calc_rhs_mk(double* rhs, double* pars, double* algs, double* Y_old_, double t, int mk_index)
+{
+    prep_mk_transitions(algs, pars, Y_old_, t, mk_index);
+
+    if (mk_index == 0 || mk_index == -1) {
+        C_Na2_f_ = ((((calc_alpha_Na11 * C_Na3_old_) + (calc_beta_Na12 * C_Na1_old_) + (calc_alpha_Na3 * IC_Na2_old_)) - ((calc_beta_Na11 * C_Na2_old_) + (calc_alpha_Na12 * C_Na2_old_) + (calc_beta_Na3 * C_Na2_old_))));	// 43
+        C_Na1_f_ = ((((calc_alpha_Na12 * C_Na2_old_) + (calc_beta_Na13 * O_Na_old_) + (calc_alpha_Na3 * IF_Na_old_)) - ((calc_beta_Na12 * C_Na1_old_) + (calc_alpha_Na13 * C_Na1_old_) + (calc_beta_Na3 * C_Na1_old_))));	// 44
+        O_Na_f_ = ((((calc_alpha_Na13 * C_Na1_old_) + (calc_beta_Na2 * IF_Na_old_)) - ((calc_beta_Na13 * O_Na_old_) + (calc_alpha_Na2 * O_Na_old_))));	// 45
+        IF_Na_f_ = ((((calc_alpha_Na2 * O_Na_old_) + (calc_beta_Na3 * C_Na1_old_) + (calc_beta_Na4 * I1_Na_old_) + (calc_alpha_Na12 * IC_Na2_old_)) - ((calc_beta_Na2 * IF_Na_old_) + (calc_alpha_Na3 * IF_Na_old_) + (calc_alpha_Na4 * IF_Na_old_) + (calc_beta_Na12 * IF_Na_old_))));	// 46
+        I1_Na_f_ = ((((calc_alpha_Na4 * IF_Na_old_) + (calc_beta_Na5 * I2_Na_old_)) - ((calc_beta_Na4 * I1_Na_old_) + (calc_alpha_Na5 * I1_Na_old_))));	// 47
+        I2_Na_f_ = (((calc_alpha_Na5 * I1_Na_old_) - (calc_beta_Na5 * I2_Na_old_)));	// 48
+        IC_Na2_f_ = ((((calc_alpha_Na11 * IC_Na3_old_) + (calc_beta_Na12 * IF_Na_old_) + (calc_beta_Na3 * C_Na2_old_)) - ((calc_beta_Na11 * IC_Na2_old_) + (calc_alpha_Na12 * IC_Na2_old_) + (calc_alpha_Na3 * IC_Na2_old_))));	// 49
+        IC_Na3_f_ = ((((calc_beta_Na11 * IC_Na2_old_) + (calc_beta_Na3 * C_Na3_old_)) - ((calc_alpha_Na11 * IC_Na3_old_) + (calc_alpha_Na3 * IC_Na3_old_))));	// 50
+        C_Na3_f_ = (1.0e+00 - (O_Na_f_ + C_Na1_f_ + C_Na2_f_ + IF_Na_f_ + I1_Na_f_ + I2_Na_f_ + IC_Na2_f_ + IC_Na3_f_));
+    }
+
+    if (mk_index == 1 || mk_index == -1) {
+        O_f_ = ((((calc_alpha * C4_old_) + (Kpcb * I1_old_) + (1.0e-03 * ((calc_alpha * I2_old_) - (calc_Kpcf * O_old_)))) - ((4.0e+00 * calc_beta * O_old_) + (calc_gamma * O_old_))));	// 23
+        C2_f_ = ((((4.0e+00 * calc_alpha * C1_old_) + (2.0e+00 * calc_beta * C3_old_)) - ((calc_beta * C2_old_) + (3.0e+00 * calc_alpha * C2_old_))));	// 25
+        C3_f_ = ((((3.0e+00 * calc_alpha * C2_old_) + (3.0e+00 * calc_beta * C4_old_)) - ((2.0e+00 * calc_beta * C3_old_) + (2.0e+00 * calc_alpha * C3_old_))));	// 26
+        C4_f_ = ((((2.0e+00 * calc_alpha * C3_old_) + (4.0e+00 * calc_beta * O_old_) + (1.0e-02 * ((4.0e+00 * Kpcb * calc_beta * I1_old_) - (calc_alpha * calc_gamma * C4_old_))) + (2.0e-03 * ((4.0e+00 * calc_beta * I2_old_) - (calc_Kpcf * C4_old_))) + (4.0e+00 * calc_beta * Kpcb * I3_old_)) - ((3.0e+00 * calc_beta * C4_old_) + (calc_alpha * C4_old_) + (1.0e+00 * calc_gamma * calc_Kpcf * C4_old_))));	// 27
+        I1_f_ = ((((calc_gamma * O_old_) + (1.0e-03 * ((calc_alpha * I3_old_) - (calc_Kpcf * I1_old_))) + (1.0e-02 * ((calc_alpha * calc_gamma * C4_old_) - (4.0e+00 * calc_beta * Kpcb * I1_old_)))) - (Kpcb * I1_old_)));	// 28
+        I2_f_ = ((((1.0e-03 * ((calc_Kpcf * O_old_) - (calc_alpha * I2_old_))) + (Kpcb * I3_old_) + (2.0e-03 * ((calc_Kpcf * C4_old_) - (4.0e+00 * calc_beta * I2_old_)))) - (calc_gamma * I2_old_)));	// 29
+        I3_f_ = ((((1.0e-03 * ((calc_Kpcf * I1_old_) - (calc_alpha * I3_old_))) + (calc_gamma * I2_old_) + (1.0e+00 * calc_gamma * calc_Kpcf * C4_old_)) - ((4.0e+00 * calc_beta * Kpcb * I3_old_) + (Kpcb * I3_old_))));	// 30
+        C1_f_ = (1.0e+00 - (O_f_ + C2_f_ + C3_f_ + C4_f_ + I1_f_ + I2_f_ + I3_f_));	//24
+    }
+
+    if (mk_index == 2 || mk_index == -1) {
+        C_K2_f_ = ((((kf * C_K1_old_) + (calc_beta_a1 * O_K_old_)) - ((kb * C_K2_old_) + (calc_alpha_a1 * C_K2_old_))));	// 98
+        C_K1_f_ = ((((calc_alpha_a0 * C_K0_old_) + (kb * C_K2_old_)) - ((calc_beta_a0 * C_K1_old_) + (kf * C_K1_old_))));	// 99
+        O_K_f_ = ((((calc_alpha_a1 * C_K2_old_) + (calc_beta_i_duplicated_rapid_delayed_rectifier_potassium_current * I_K_old_)) - ((calc_beta_a1 * O_K_old_) + (calc_alpha_i_duplicated_rapid_delayed_rectifier_potassium_current * O_K_old_))));	// 100
+        I_K_f_ = (((calc_alpha_i_duplicated_rapid_delayed_rectifier_potassium_current * O_K_old_) - (calc_beta_i_duplicated_rapid_delayed_rectifier_potassium_current * I_K_old_)));
+        C_K0_f_ = (1.0e+00 - (C_K1_f_ + C_K2_f_ + O_K_f_ + I_K_f_));
+    }
+
+    if (mk_index == 3 || mk_index == -1) {
+        P_O1_f_ = ((((k_plus_a * pow(Cass_old_, n) * P_C1_old_) + (k_minus_b * P_O2_old_) + (k_minus_c * P_C2_old_)) - ((k_minus_a * P_O1_old_) + (k_plus_b * pow(Cass_old_, m) * P_O1_old_) + (k_plus_c * P_O1_old_))));	// 18
+        P_O2_f_ = (((k_plus_b * pow(Cass_old_, m) * P_O1_old_) - (k_minus_b * P_O2_old_)));	// 20
+        P_C2_f_ = (((k_plus_c * P_O1_old_) - (k_minus_c * P_C2_old_)));	// 21
+        P_C1_f_ = (1.0e+00 - (P_C2_f_ + P_O1_f_ + P_O2_f_));	//19
+    }
 }
 
 void Bondarenko2004::calc_mk_transitions(double** Tr, int mk_index, double* pars, double* algs, double* Y_old_, double t) 
@@ -438,7 +458,7 @@ void Bondarenko2004::calc_mk_transitions(double** Tr, int mk_index, double* pars
 }
 
 bool Bondarenko2004::has_single_rhs_formula(int i) {
-    return i <= 2;
+    return i == 0 || i == 2;
 }
 	
 double Bondarenko2004::calc_single_rhs_formula(int i, double* pars, double* Y_old_, double t) {
@@ -466,7 +486,9 @@ double Bondarenko2004::calc_single_rhs_formula(int i, double* pars, double* Y_ol
         double c_i_ClCa = (((g_ClCa*c_O_ClCa*Cai_old_)/(Cai_old_+Km_Cl))*(V_old_-E_Cl));
         double c_i_NaK = ((((i_NaK_max*c_f_NaK*1.000000000000000e+00)/(1.000000000000000e+00+pow((Km_Nai/Nai_old_),1.500000000000000e+00)))*Ko)/(Ko+Km_Ko));
         return ((-(c_i_CaL+c_i_pCa+c_i_NaCa+c_i_Cab+c_i_Na+c_i_Nab+c_i_NaK+c_i_Kto_f+c_i_Kto_s+c_i_K1+c_i_Ks+c_i_Kur+c_i_Kss+c_i_Kr+c_i_ClCa+c_i_stim)));
-    } else if (i == 1) {
+    } 
+    /*
+    else if (i == 1) {
         double c_Bi = pow((1.000000000000000e+00+((CMDN_tot*Km_CMDN)/pow((Km_CMDN+Cai_old_),2.000000000000000e+00))),(-1.000000000000000e+00));
         double c_J_xfer = ((Cass_old_-Cai_old_)/tau_xfer);
         double c_J_leak = (v2*(CaNSR_old_-Cai_old_));
@@ -477,7 +499,8 @@ double Bondarenko2004::calc_single_rhs_formula(int i, double* pars, double* Y_ol
         double c_E_CaN = (((R*T)/(2.000000000000000e+00*F))*log((Cao/Cai_old_)));
         double c_i_Cab = (g_Cab*(V_old_-c_E_CaN));
         return ((c_Bi*((c_J_leak+c_J_xfer)-(c_J_up+c_J_trpn+((((c_i_Cab+c_i_pCa)-(2.000000000000000e+00*c_i_NaCa))*Acap*Cm)/(2.000000000000000e+00*Vmyo*F))))));
-    } else if (i == 2) {
+    } /* */
+    else if (i == 2) {
         double c_Bss = pow((1.0+((CMDN_tot*Km_CMDN)/pow((Km_CMDN+Cass_old_),2.0))),(-1.0));
         double c_J_rel = (v1*(P_O1_old_+P_O2_old_)*(CaJSR_old_-Cass_old_)*P_RyR_old_);
         double c_J_xfer = ((Cass_old_-Cai_old_)/tau_xfer);
@@ -486,4 +509,8 @@ double Bondarenko2004::calc_single_rhs_formula(int i, double* pars, double* Y_ol
     }
 
     return 0;
+}
+
+bool Bondarenko2004::is_mk_active(int i) {
+    return i == 3;
 }

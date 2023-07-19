@@ -37,17 +37,18 @@ public:
 	// Abstract methods
 	virtual void calc_rhs_nl(double* rhs, double* pars, double* algs, double* Y_old_, double t) = 0;
 	virtual void calc_rhs_hh(double* rhs, double* pars, double* algs, double* Y_old_, double t) = 0;
-	virtual void calc_rhs_mk(double* rhs, double* pars, double* algs, double* Y_old_, double t) = 0;
+	virtual void calc_rhs_mk(double* rhs, double* pars, double* algs, double* Y_old_, double t, int mk_index = -1) {};
 
 	virtual void calc_hh_coeff(double* a, double* b, double* pars, double* algs, double* Y_old_, double t) = 0;
-	virtual void prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t) = 0;
-	virtual void calc_mk_transitions(double** T, int mk_index, double* pars, double* algs, double* Y_old_, double t) = 0;
+	virtual void prep_mk_transitions(double* algs, double* pars, double* Y_old_, double t, int mk_index = -1) {};
+	virtual void calc_mk_transitions(double** T, int mk_index, double* pars, double* algs, double* Y_old_, double t) {};
 
 	virtual void set_default_parameters(double* pars) = 0;
 	virtual void set_default_initial_state(double* Y_old_) = 0;
 
 	virtual bool has_single_rhs_formula(int i) { return false; };
 	virtual double calc_single_rhs_formula(int i, double* pars, double* Y_old_, double t) { return 0; };
+	virtual bool is_mk_active(int i) { return true; }
 
 	const int NLStart; const int NLEnd;
 	const int HHStart; const int HHEnd;
