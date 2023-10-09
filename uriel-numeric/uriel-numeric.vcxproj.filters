@@ -37,6 +37,12 @@
     <Filter Include="Arquivos de Origem\method\ode">
       <UniqueIdentifier>{1b4abe8d-cccb-451b-b04a-9f9d977e42b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Arquivos de Cabeçalho\output">
+      <UniqueIdentifier>{9f806a57-3b7b-47ff-8d02-47ce49d12253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Origem\output">
+      <UniqueIdentifier>{cbea19a4-dd29-4d41-a908-d65a245c750b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\model\ModelVariableDescription.h">
@@ -96,6 +102,15 @@
     <ClInclude Include="include\model\electrophysiology\Bondarenko2004_defs.h">
       <Filter>Arquivos de Cabeçalho\model\electrophysiology</Filter>
     </ClInclude>
+    <ClInclude Include="include\output\SolutionPrinter.h">
+      <Filter>Arquivos de Cabeçalho\output</Filter>
+    </ClInclude>
+    <ClInclude Include="include\output\DummyPrinter.h">
+      <Filter>Arquivos de Cabeçalho\output</Filter>
+    </ClInclude>
+    <ClInclude Include="include\output\SingleFilePrinter.h">
+      <Filter>Arquivos de Cabeçalho\output</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\model\Model.cpp">
@@ -130,6 +145,12 @@
     </ClCompile>
     <ClCompile Include="source\model\electrophysiology\Bondarenko2004.cpp">
       <Filter>Arquivos de Origem\model\electrophysiology</Filter>
+    </ClCompile>
+    <ClCompile Include="source\output\DummyPrinter.cpp">
+      <Filter>Arquivos de Origem\output</Filter>
+    </ClCompile>
+    <ClCompile Include="source\output\SingleFilePrinter.cpp">
+      <Filter>Arquivos de Origem\output</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

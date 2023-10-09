@@ -77,13 +77,43 @@ bool OptionParser::has(const string& option) {
 }
 
 double OptionParser::parseDouble(const string& option) {
-	double aux;
-	sscanf(cmd.optionValue(option).c_str(), "%lf", &aux);
-	return aux;
+	return parseDouble_(cmd.optionValue(option));
 }
 
 int OptionParser::parseInt(const string& option) {
+	return parseInt_(cmd.optionValue(option));
+}
+
+int OptionParser::parseInt_(const string& str) {
 	int aux;
-	sscanf(cmd.optionValue(option).c_str(), "%d", &aux);
+	sscanf(str.c_str(), "%d", &aux);
 	return aux;
+}
+
+double OptionParser::parseDouble_(const string& str) {
+	double aux;
+	sscanf(str.c_str(), "%lf", &aux);
+	return aux;
+}
+
+vector<IndexedValue> OptionParser::parseIndexedValues(const string& option) {
+	vector<IndexedValue> values;
+	vector<string> tokens;
+	CommandLineProcessing::splitString(tokens, cmd.optionValue(option), "/");
+
+	for (unsigned int i = 0; i < tokens.size(); i++) {
+		string pair_str = tokens[i];
+		vector<string> subtokens;
+		CommandLineProcessing::splitString(subtokens, pair_str, "_");
+		if (subtokens.size() != 2) {
+			cout << "Parse ERROR!!!: Could not parse indexed value." << endl;
+			return values;
+		}
+		IndexedValue value;
+		value.index = parseInt_(subtokens[0]);
+		value.value = parseDouble_(subtokens[1]);
+		values.push_back(value);
+	}
+
+	return values;
 }

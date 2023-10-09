@@ -14,18 +14,30 @@ void UniformizationMethod::step(double* Y_new_, Model* model, double* pars, doub
 {
 	CellModel* cellModel = (CellModel*)model;
 	cellModel->calc_rhs_nl(rhs, pars, algs, Y_old_, t);
-	for (int l = cellModel->NLStart; l < cellModel->NLEnd; l++)
-		Y_new_[l] = Y_old_[l] + dt * rhs[l];
+	for (int l = cellModel->NLStart; l < cellModel->NLEnd; l++) {
+		if (cellModel->has_single_rhs_formula(l)) { // Perform SAST1 step if possible
+			double orig_value = Y_old_[l];
+			Y_old_[l] += EPSILON;
+			double f_par = (cellModel->calc_single_rhs_formula(l, pars, Y_old_, t) - rhs[l]) / EPSILON;
+			Y_old_[l] = orig_value;
+			Y_new_[l] = abs(f_par) < EPSILON ? 
+				Y_old_[l] + dt * rhs[l] : 
+				Y_old_[l] + rhs[l]/f_par * (exp(f_par*dt) - 1.0);
+		} else {
+			Y_new_[l] = Y_old_[l] + dt * rhs[l];
+		}
+	}
 	rushLarsenMethod->partitionedStep(Y_new_, model, pars, algs, rhs, Y_old_, t, dt);
 	partitionedStep(Y_new_, model, pars, algs, rhs, Y_old_, t, dt, Tr);
 }
 
-void UniformizationMethod::partitionedStep(double* Y_new_, Model* model, double* pars, double* algs, double* rhs, double* Y_old_, double t, double dt, double** Tr)
+void UniformizationMethod::partitionedStep(
+	double* Y_new_, Model* model, double* pars, double* algs, 
+	double* rhs, double* Y_old_, double t, double dt, double** Tr
+)
 {
 	CellModel* cellModel = (CellModel*)model;
 	int startIndex = cellModel->MKStart;
-
-	cellModel->prep_mk_transitions(algs, pars, Y_old_, t);
 
 	double* aux = new double[cellModel->nStates_MKM_max];
 	for (int k = 0; k < cellModel->nMarkovModels; k++) {
@@ -33,12 +45,18 @@ void UniformizationMethod::partitionedStep(double* Y_new_, Model* model, double*
 		double* y_new_ = &(Y_new_[startIndex]);
 		double* pi = &(rhs[startIndex]);
 		int m = cellModel->nStates_MKM[k];
+		if (cellModel->is_mk_active(k)) {
+			cellModel->prep_mk_transitions(algs, pars, Y_old_, t, k);
+			for (int i = 0; i < m; i++) for (int j = 0; j < m; j++) Tr[i][j] = 0;
+			cellModel->calc_mk_transitions(Tr, k, pars, algs, Y_old_, t);
 
-		for (int i = 0; i < m; i++) for (int j = 0; j < m; j++) Tr[i][j] = 0;
-		cellModel->calc_mk_transitions(Tr, k, pars, algs, Y_old_, t);
-
-		step(y_new_, m, aux, Tr, pi, y_old_, dt);
-
+			step(y_new_, m, aux, Tr, pi, y_old_, dt);
+		} else {
+			cellModel->calc_rhs_mk(rhs, pars, algs, Y_old_, t, k);
+			for (int i = 0; i < m; i++) {
+				y_new_[i] = y_old_[i] + dt * pi[i];
+			}
+		}
 		startIndex += m;
 	}
 	delete[] aux;
