@@ -5,6 +5,7 @@ include_directories("include")
 file(GLOB_RECURSE
 	SOURCES 
 	"source/pch.cpp"
+	"source/output/*.cpp"
 	"source/method/ode/*.cpp"
 	"source/model/*.cpp"
 	"source/model/electrophysiology/*.cpp"

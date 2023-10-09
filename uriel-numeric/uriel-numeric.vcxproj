@@ -173,6 +173,9 @@
     <ClInclude Include="include\model\electrophysiology\Tusscher2004_defs.h" />
     <ClInclude Include="include\model\ModelVariableDescription.h" />
     <ClInclude Include="include\model\Model.h" />
+    <ClInclude Include="include\output\DummyPrinter.h" />
+    <ClInclude Include="include\output\SingleFilePrinter.h" />
+    <ClInclude Include="include\output\SolutionPrinter.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\urielenv.h" />
   </ItemGroup>
@@ -187,6 +190,8 @@
     <ClCompile Include="source\model\electrophysiology\Fox2002.cpp" />
     <ClCompile Include="source\model\electrophysiology\Tusscher2004.cpp" />
     <ClCompile Include="source\model\Model.cpp" />
+    <ClCompile Include="source\output\DummyPrinter.cpp" />
+    <ClCompile Include="source\output\SingleFilePrinter.cpp" />
     <ClCompile Include="source\pch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

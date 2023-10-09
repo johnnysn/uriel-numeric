@@ -9,7 +9,9 @@
 #define	OPTIONPARSER_H
 
 #include <string>
+#include <vector>
 #include "options/argvparser.h"
+#include "options/IndexedValue.h"
 
 using namespace std;
 using namespace CommandLineProcessing;
@@ -30,7 +32,10 @@ public:
 	bool has(const string& option);
 
 	static double parseDouble(const string& option);
+	static double parseDouble_(const string& str);
 	static int parseInt(const string& option);
+	static int parseInt_(const string& str);
+	static vector<IndexedValue> parseIndexedValues(const string& option);
 private:
     static ArgvParser cmd;
 	ArgvParser myCmd;
