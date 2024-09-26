@@ -5,6 +5,8 @@
 #include "model/electrophysiology/Fox2002.h"
 #include "model/electrophysiology/Tusscher2004.h"
 #include "model/electrophysiology/Bondarenko2004.h"
+#include "model/electrophysiology/Noble1962.h"
+#include "model/electrophysiology/ToRORd_fkatp_2019.h"
 #include "method/ode/RushLarsenAdaptiveMethod.h"
 #include "method/ode/ForwardEulerAdaptiveMethod.h"
 #include "method/ode/RushLarsenMethod.h"

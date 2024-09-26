@@ -268,5 +268,10 @@ cardiac-cell-solver
 __pycache__/
 *.pyc
 
-# IDE configuration
-.vscode
+vscode/
+cardiac-cell-solver/build/
+cardiac-cell-solver/outputs/
+cardiac-cell-solver/scripts/
+uriel-numeric/build/
+uriel-tools/build/
+
