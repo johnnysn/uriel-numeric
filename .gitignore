@@ -260,9 +260,12 @@ paket-files/
 .cr/
 
 # Makefiles & executables
-Makefile
-cardiac-monodomain-fd-solver
-cardiac-cell-solver
+# Makefile
+cardiac-cell-solver/cardiac-cell-solver
+cardiac-monodomain-fd-solver/cardiac-monodomain-fd-solver
+
+# Data files
+*.dat
 
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
