@@ -1,7 +1,7 @@
 # Root Makefile
 
 # Default target (if no specific target is given, this will run)
-all: numeric tools cellsolver
+all: numeric tools cellsolver monodomainsolver
 
 numeric:
 	@echo "Building uriel-numeric..."

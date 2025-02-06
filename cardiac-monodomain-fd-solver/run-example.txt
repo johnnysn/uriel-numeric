@@ -1,0 +1,1 @@
+./cardiac-monodomain-fd-solver --model=0 --method=0 --dt=0.02 --dt_save=1 --tf=500 --dx=0.02 --dy=0.02 --Lx=2 --Ly=2 --threads=4
