@@ -260,7 +260,9 @@ paket-files/
 .cr/
 
 # Makefiles & executables
-# Makefile
+cardiac-cell-solver/Makefile
+cardiac-monodomain-fd-solver/Makefile
+
 cardiac-cell-solver/cardiac-cell-solver
 cardiac-monodomain-fd-solver/cardiac-monodomain-fd-solver
 
