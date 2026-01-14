@@ -1,0 +1,21 @@
+name: Build and compile
+
+# Only run this when the master branch changes
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+# This job builds the program
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build using CMake
+      run: source ./recompile_project.sh

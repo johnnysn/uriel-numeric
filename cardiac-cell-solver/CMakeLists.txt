@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 2.6)
 project (cardiac-cell-solver)
 
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+
 include_directories("../uriel-numeric/include" "../uriel-tools/include")
 set(SOURCES cardiac-cell-solver.cpp )
 
